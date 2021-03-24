@@ -39,8 +39,7 @@ SPACESHIP_TIME_SHOW=true
 SPACESHIP_DIR_TRUNC_REPO=true
 
 # User configuration
-path=($HOME/bin /snap/bin /usr/local/go/bin $HOME/go/bin $path)
-#fpath=($HOME/projects/webflo/wam $fpath)
+path=($HOME/.local/bin $HOME/bin /snap/bin /usr/local/go/bin $HOME/go/bin $path)
 
 for file in $HOME/.dotfiles/{options,aliases,exports,functions}.{zsh,sh}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
@@ -53,3 +52,4 @@ if [[ -d $HOME/.zsh ]]; then
 	done
 	unset file
 fi
+
