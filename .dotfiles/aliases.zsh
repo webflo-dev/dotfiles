@@ -18,7 +18,7 @@ alias lrt='ls -1Fcrt'
 
 #alias ls='LC_COLLATE=C ls --tabsize=0 --literal --show-control-chars --color=always --human-readable'
 #alias ls='ls --tabsize=0 --literal --show-control-chars --color=always --human-readable'
-alias ls='ls -l -h -v --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto -F --tabsize=0 --literal --show-control-chars --color=always --human-readable'
+alias ls='ls -l -h -v --group-directories-first --time-style=+"%Y-%m-%d %H:%M" --color=auto -F --tabsize=0 --literal --show-control-chars --color=always --human-readable'
 alias la='ls -a'
 
 #alias grep='grep --color=auto -d skip'
@@ -61,4 +61,6 @@ alias dotfiles='git --git-dir=$HOME/.dotfiles-git/ --work-tree=$HOME'
 
 alias cat='bat'
 alias vi=vim
+alias nano=vim
 
+alias la='exa -la -L 2 --git --group-directories-first --ignore-glob="node_modules|.git"'
