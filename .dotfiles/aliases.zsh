@@ -6,8 +6,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias -- -="cd -"
 
-alias ls='ls -l -h -v --group-directories-first --time-style=+"%Y-%m-%d %H:%M" --color=auto -F --tabsize=0 --literal --show-control-chars --color=always --human-readable'
-alias la='ls -a'
+#alias ls='ls -l -h -v --group-directories-first --time-style=+"%Y-%m-%d %H:%M" --color=auto -F --tabsize=0 --literal --show-control-chars --color=always --human-readable'
+#alias la='ls -a'
 
 alias grep="grep --color=auto"
 alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
@@ -44,7 +44,7 @@ alias dotfiles='git --git-dir=$HOME/.dotfiles-git/ --work-tree=$HOME'
 
 alias cat='bat'
 alias vi=vim
-alias nano=vim
+#alias nano=vim
 
-alias ls='exa -la -L 2 --git --group-directories-first --ignore-glob="node_modules|.git"'
+alias ls='exa -la -L 3 --git --group-directories-first --ignore-glob="node_modules|.git"'
 alias la=ls

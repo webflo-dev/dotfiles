@@ -30,7 +30,6 @@ plugins=(
 )
 
 
-source $ZSH/oh-my-zsh.sh
 
 ZSH_AUTOSUGGEST_USE_ASYNC="true"
 
@@ -41,15 +40,25 @@ SPACESHIP_DIR_TRUNC_REPO=true
 # User configuration
 path=($HOME/.local/bin $HOME/bin /snap/bin /usr/local/go/bin $HOME/go/bin $path)
 
-for file in $HOME/.dotfiles/{options,aliases,exports,functions}.{zsh,sh}; do
-	[ -r "$file" ] && [ -f "$file" ] && source "$file"
+
+
+for file in $HOME/.dotfiles/{exports,functions}.{zsh,sh}; do
+  [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
+
+source $ZSH/oh-my-zsh.sh
+
+for file in $HOME/.dotfiles/{options,aliases}.{zsh,sh}; do
+  [ -r "$file" ] && [ -f "$file" ] && source "$file"
+done
+
+
 unset file
 
 if [[ -d $HOME/.zsh ]]; then
-	for file in $HOME/.zsh/*.{zsh,sh}; do
-		[ -r "$file" ] && [ -f "$file" ] && source "$file"
-	done
-	unset file
+  for file in $HOME/.zsh/*.{zsh,sh}; do
+    [ -r "$file" ] && [ -f "$file" ] && source "$file"
+  done
+  unset file
 fi
 

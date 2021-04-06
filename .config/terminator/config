@@ -1,12 +1,12 @@
 [global_config]
-  handle_size = 5
+  handle_size = 3
   geometry_hinting = True
   tab_position = bottom
   hide_from_taskbar = True
   title_transmit_fg_color = "#6272a4"
   title_transmit_bg_color = "#d3d7cf"
   title_inactive_fg_color = "#6272a4"
-  inactive_color_offset = 0.7083333333333334
+  inactive_color_offset = 0.4013605442176871
   always_split_with_profile = True
 [keybindings]
   page_up = <Alt>Page_Up

@@ -14,3 +14,5 @@ export HISTSIZE=5000
 export SAVEHIST=5000
 
 
+export FZF_BASE=~/.zsh/fzf
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
