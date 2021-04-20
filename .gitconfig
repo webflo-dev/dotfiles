@@ -1,14 +1,13 @@
 [user]
 	name = Florent
 	email = 6934017+webflo-dev@users.noreply.github.com
-
-[credential]
-	helper = cache --timeout 54000
-
 [core]
 	# Speed up commands involving untracked files such as `git status`.
 	# https://git-scm.com/docs/git-update-index#_untracked_cache
 	untrackedCache = true
+
+[credential]
+	helper = cache --timeout 604800
 
 [color]
     ui = auto
