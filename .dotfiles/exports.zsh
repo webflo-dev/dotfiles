@@ -16,3 +16,6 @@ export SAVEHIST=5000
 
 export FZF_BASE=~/.zsh/fzf
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"

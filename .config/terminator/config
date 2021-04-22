@@ -6,7 +6,7 @@
   title_transmit_fg_color = "#6272a4"
   title_transmit_bg_color = "#d3d7cf"
   title_inactive_fg_color = "#6272a4"
-  inactive_color_offset = 0.4013605442176871
+  inactive_color_offset = 0.6054421768707483
   always_split_with_profile = True
 [keybindings]
   page_up = <Alt>Page_Up
