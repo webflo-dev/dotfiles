@@ -26,7 +26,7 @@ plugins=(
 	pip
 	yarn
 	pass
-	nvm
+#	nvm
 )
 
 
