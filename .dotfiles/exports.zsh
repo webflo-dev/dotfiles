@@ -15,6 +15,9 @@ export SAVEHIST=5000
 
 
 export FZF_BASE=~/.zsh/fzf
+export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git --color=always'
+export FZF_DEFAULT_OPTS="--ansi"
+
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 export VOLTA_HOME="$HOME/.volta"

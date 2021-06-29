@@ -26,7 +26,7 @@ plugins=(
 	pip
 	yarn
 	pass
-#	nvm
+	nvm
 )
 
 
@@ -39,7 +39,7 @@ SPACESHIP_DIR_TRUNC_REPO=true
 
 # User configuration
 path=($HOME/.local/bin $HOME/bin /snap/bin /usr/local/go/bin $HOME/go/bin $path)
-
+fpath=($HOME/.zsh/completions $fpath)
 
 
 for file in $HOME/.dotfiles/{exports,functions}.{zsh,sh}; do
@@ -50,15 +50,17 @@ source $ZSH/oh-my-zsh.sh
 
 for file in $HOME/.dotfiles/{options,aliases}.{zsh,sh}; do
   [ -r "$file" ] && [ -f "$file" ] && source "$file"
+  unset file
 done
-
-
-unset file
 
 if [[ -d $HOME/.zsh ]]; then
   for file in $HOME/.zsh/*.{zsh,sh}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file"
+    unset file
   done
-  unset file
 fi
 
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+source /home/florent/.config/broot/launcher/bash/br

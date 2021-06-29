@@ -6,6 +6,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias -- -="cd -"
 
+alias man=cheat
+
 #alias ls='ls -l -h -v --group-directories-first --time-style=+"%Y-%m-%d %H:%M" --color=auto -F --tabsize=0 --literal --show-control-chars --color=always --human-readable'
 #alias la='ls -a'
 
@@ -17,8 +19,10 @@ alias less="less -R"
 
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
-alias fd='find . -type d -name'
-alias ff='find . -type f -name'
+
+#alias fd='find . -type d -name'
+#alias ff='find . -type f -name'
+alias fd=fdfind
 
 alias rm='rm -i'
 alias cp='cp -i'
@@ -48,3 +52,5 @@ alias vi=vim
 
 alias ls='exa -la -L 3 --git --group-directories-first --ignore-glob="node_modules|.git"'
 alias la=ls
+
+alias keepalive-vdi='xdotool key --window $(xdotool search --name FR09540462W) --delay 300000 --repeat 288 space'
