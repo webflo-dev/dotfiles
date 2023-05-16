@@ -25,6 +25,19 @@ dotfiles:
   d_kitty:
     src: config/kitty
     dst: ~/.config/kitty
+  d_btop:
+    src: config/btop
+    dst: ~/.config/btop
+  d_neofetch:
+    src: config/neofetch
+    dst: ~/.config/neofetch
+  d_ranger:
+    src: config/ranger
+    dst: ~/.config/ranger
+  f_pulsemixer.cfg:
+    src: config/pulsemixer.cfg
+    dst: ~/.config/pulsemixer.cfg
+    chmod: '755'
 profiles:
   base:
     dotfiles:
@@ -35,3 +48,9 @@ profiles:
     - d_zsh
     - f_starship.toml
     - d_kitty
+  cli:
+    dotfiles:
+    - d_btop
+    - d_neofetch
+    - d_ranger
+    - f_pulsemixer.cfg
