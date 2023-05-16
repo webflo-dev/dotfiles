@@ -74,6 +74,9 @@ dotfiles:
   d_applications:
     src: local/share/applications
     dst: ~/.local/share/applications
+  d_hypr:
+    src: config/hypr
+    dst: ~/.config/hypr
 profiles:
   base:
     dotfiles:
@@ -107,3 +110,6 @@ profiles:
     - f_microsoft-edge-stable-flags.conf
     - f_mimeapps.list
     - d_applications
+  hyprland:
+    dotfiles:
+    - d_hypr
