@@ -80,6 +80,9 @@ dotfiles:
   d_qtile:
     src: config/qtile
     dst: ~/.config/qtile
+  f_libinput-gestures.conf:
+    src: config/libinput-gestures.conf
+    dst: ~/.config/libinput-gestures.conf
 profiles:
   base:
     dotfiles:
@@ -119,3 +122,6 @@ profiles:
   qtile:
     dotfiles:
     - d_qtile
+  laptop:
+    dotfiles:
+    - f_libinput-gestures.conf
