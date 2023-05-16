@@ -1,0 +1,81 @@
+let SessionLoad = 1
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~/.config/awesome
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+let s:shortmess_save = &shortmess
+if &shortmess =~ 'A'
+  set shortmess=aoOA
+else
+  set shortmess=aoO
+endif
+badd +24 themes/spring/widgets/gpu.lua
+badd +6 user_variables.lua
+badd +1 oil:///home/florent/.config/awesome/
+badd +68 themes/spring/widgets/time.lua
+badd +32 themes/spring/theme.lua
+badd +18 helpers/ui.lua
+badd +1 themes/spring/svg/fontawesome-duotone/clock-eight.svg
+badd +1 themes/spring/svg/gpu.svg
+badd +1 themes/spring/svg/clock.svg
+badd +22 themes/spring/widgets/cpu.lua
+badd +12 themes/spring/widgets/date.lua
+badd +10 themes/spring/widgets/ethernet.lua
+badd +6 themes/spring/bar.lua
+badd +21 signals/network.lua
+badd +15 themes/spring/widgets/network.lua
+badd +66 themes/spring/widgets/layout-box.lua
+badd +24 themes/spring/widgets/memory.lua
+badd +8 themes/spring/widgets/mic.lua
+badd +29 themes/spring/widgets/system.lua
+badd +25 themes/spring/widgets/volume.lua
+badd +10 themes/spring/widgets/wifi.lua
+badd +25 themes/spring/widgets/audio.lua
+badd +72 themes/spring/widgets/base.lua
+badd +32 themes/spring/widgets/workspaces.lua
+badd +1 themes/spring/svg/circle-1-solid.svg
+badd +16 themes/spring/widgets/layouts.lua
+badd +1 themes/summer/widgets/tag_list.lua
+argglobal
+%argdel
+$argadd oil:///home/florent/.config/awesome/
+edit themes/spring/widgets/time.lua
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+balt themes/spring/widgets/layouts.lua
+let s:l = 68 - ((67 * winheight(0) + 41) / 83)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 68
+normal! 03|
+if exists(':tcd') == 2 | tcd ~/.config/awesome | endif
+tabnext 1
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20
+let &shortmess = s:shortmess_save
+let &winminheight = s:save_winminheight
+let &winminwidth = s:save_winminwidth
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+set hlsearch
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

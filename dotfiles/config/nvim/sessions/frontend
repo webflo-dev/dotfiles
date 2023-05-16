@@ -1,0 +1,134 @@
+let SessionLoad = 1
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~/dev/castor/frontend
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+let s:shortmess_save = &shortmess
+if &shortmess =~ 'A'
+  set shortmess=aoOA
+else
+  set shortmess=aoO
+endif
+badd +3 src/components/pages/PrivateSection/ProfilePageSection/TeamProfile/hook/useTeam.ts
+badd +9 src/components/pages/PrivateSection/ProfilePageSection/TeamProfile/_.tsx
+badd +48 src/components/rich/LazyTable/_.tsx
+badd +2 src/components/pages/PrivateSection/PeoplePage/components/TeamCard/_.module.scss
+badd +10 src/components/pages/PrivateSection/ProfilePageSection/TeamProfile/components/Overview/_.module.scss
+badd +17 src/components/pages/PrivateSection/components/CtaCard.tsx
+badd +4 src/components/pages/PrivateSection/components/CtaCard.module.scss
+badd +1 src/components/pages/PrivateSection/components/common.module.scss
+badd +2 src/components/pages/PrivateSection/PeoplePage/Teams/components/CreateTeamCard/_.module.scss
+badd +2 src/components/pages/PrivateSection/PeoplePage/Teams/components/Ghost/_.module.scss
+badd +30 src/components/pages/PrivateSection/ProfilePageSection/TeamProfile/components/Overview/TeamUsers.tsx
+badd +27 src/components/pages/PrivateSection/ProfilePageSection/common/Header/TeamList.tsx
+badd +26 src/components/pages/PrivateSection/ProfilePageSection/common/Header/TeamList.module.scss
+badd +57 src/components/system/buttons/Button/_.module.scss
+badd +24 src/components/system/Avatar/TeamAvatar/_.tsx
+badd +71 src/components/system/Avatar/BaseAvatar/_.tsx
+badd +12 src/components/system/Circled/CircledIcon.tsx
+badd +20 src/components/system/Circled/_.module.scss
+badd +21 src/components/system/Avatar/TeamAvatar/_.module.scss
+badd +9 src/components/rich/AvatarList/_.tsx
+badd +3 src/components/rich/AvatarList/_.module.scss
+badd +44 src/components/pages/PrivateSection/PeoplePage/_.tsx
+badd +49 src/components/pages/PrivateSection/PeoplePage/Users/_.tsx
+badd +17 src/components/pages/PrivateSection/PeoplePage/Users/constants.ts
+badd +8 src/components/pages/PrivateSection/PeoplePage/Users/Headings.tsx
+badd +27 src/components/pages/PrivateSection/PeoplePage/Users/Row/_.tsx
+badd +14 src/components/pages/PrivateSection/PeoplePage/Users/Row/SourcesCell/_.tsx
+badd +14 src/components/pages/PrivateSection/components/CtaCard/_.tsx
+badd +1 src/components/pages/PrivateSection/components/CtaCard/index.ts
+badd +2 src/components/pages/PrivateSection/components/CtaCard/_.module.scss
+badd +7 src/components/pages/PrivateSection/PeoplePage/Teams/_.tsx
+badd +19 src/components/pages/PrivateSection/PeoplePage/components/TeamCard/_.tsx
+badd +1 src/components/pages/PrivateSection/PeoplePage/components/TeamInfoProvider/_.tsx
+badd +1 src/components/pages/PrivateSection/components/CreateTeamCard/index.ts
+badd +5 src/components/pages/PrivateSection/components/CreateTeamCard/_.tsx
+badd +1 src/components/pages/PrivateSection/components/Ghost/_.tsx
+badd +1 src/components/pages/PrivateSection/components/Ghost/index.ts
+badd +2 src/components/pages/PrivateSection/components/CreateTeamCard/_.module.scss
+badd +3 src/components/pages/PrivateSection/PeoplePage/components/TeamInfoProvider/types.ts
+badd +50 src/components/pages/PrivateSection/PeoplePage/Users/Row/_.cy.tsx
+badd +13 src/components/pages/PrivateSection/PeoplePage/Users/Row/RoleCell/_.tsx
+badd +11 src/components/pages/PrivateSection/PeoplePage/Users/types.ts
+badd +14 src/hooks/useAuth/hooks.ts
+badd +6 src/hooks/useAuth/AuthContext.ts
+badd +34 src/hooks/useAuth/_.tsx
+badd +36 src/hooks/useAuth/types.ts
+badd +45 src/hooks/useAuth/queries.ts
+badd +17 src/models/User.ts
+badd +1 src/components/pages/PrivateSection/ProfilePageSection/_.cy.tsx
+badd +16 src/components/pages/PrivateSection/PeoplePage/Users/queries.ts
+badd +12 src/components/pages/PrivateSection/ProfilePageSection/cy.payloads.ts
+badd +9 src/hooks/useAuthEnv/hooks.ts
+badd +3 src/components/pages/PrivateSection/PeoplePage/hook/useGetTeamInfo.ts
+badd +3 src/components/pages/PrivateSection/PeoplePage/hook/useTeamInfoContext.ts
+badd +2 src/components/pages/PrivateSection/PeoplePage/hook/index.ts
+badd +3 src/components/rich/NavigationCard/_.module.scss
+badd +14 src/components/rich/NavigationCard/_.tsx
+badd +1 src/components/rich/NavigationCard/index.ts
+badd +25 src/components/rich/CreateTeamCard/_.tsx
+badd +23 src/components/system/Circled/CircledLabel.tsx
+badd +27 src/components/system/Accordion/_.tsx
+badd +11 src/components/system/Circled/CircledBlank.tsx
+badd +3 src/components/rich/CreateTeamCard/_.module.scss
+badd +2 src/components/system/Circled/index.ts
+badd +45 src/components/system/Circled/CircledBlank.stories.tsx
+badd +16 src/components/system/Circled/CircledBlank.docs.tsx
+badd +15 src/components/system/Circled/CircledLabel.docs.tsx
+badd +35 src/components/rich/index.ts
+badd +9 src/components/pages/PrivateSection/PeoplePage/Users/components/TeamList.tsx
+badd +16 src/components/pages/PrivateSection/ProfilePageSection/TeamProfile/components/Overview/_.tsx
+badd +553 node_modules/@types/react/index.d.ts
+badd +34 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/_.tsx
+badd +17 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/SourceTable/_.tsx
+badd +21 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/_.tsx
+badd +41 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/AddSourceSection.tsx
+badd +6 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/AddSourceCard/_.tsx
+badd +14 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/AddIntegrations.tsx
+badd +13 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/AddSlackCard/_.tsx
+badd +16 src/components/rich/ActionCard/_.tsx
+badd +1 src/components/rich/ActionCard/_.module.scss
+badd +1 src/components/rich/ActionCard/index.ts
+badd +1 src/components/system/Tooltip/_.tsx
+badd +27 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/AddSourceCard/_.module.scss
+badd +37 src/components/rich/AddIntegrationCard/_.tsx
+badd +8 src/components/pages/PrivateSection/SettingsSection/IntegrationsPage/AddSources/_.module.scss
+badd +4 src/components/pages/PrivateSection/PeoplePage/Users/components/TeamList.module.scss
+badd +3 src/components/pages/PrivateSection/PeoplePage/index.ts
+badd +2 src/components/pages/PrivateSection/PeoplePage/components/index.ts
+badd +3 src/components/pages/PrivateSection/PeoplePage/components/TeamInfoProvider/index.ts
+badd +5 src/components/pages/PrivateSection/PeoplePage/components/TeamInfoProvider/Context.ts
+badd +31 src/utils/function.ts
+argglobal
+%argdel
+edit src/utils/function.ts
+argglobal
+balt src/components/rich/LazyTable/_.tsx
+let s:l = 32 - ((29 * winheight(0) + 41) / 83)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 32
+normal! 09|
+tabnext 1
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20
+let &shortmess = s:shortmess_save
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+set hlsearch
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

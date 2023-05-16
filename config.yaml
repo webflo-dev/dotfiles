@@ -54,6 +54,16 @@ dotfiles:
     src: config/gtk-3.0
     dst: ~/.config/gtk-3.0
     chmod: '700'
+  d_git:
+    src: config/git
+    dst: ~/.config/git
+  d_nvim:
+    src: config/nvim
+    dst: ~/.config/nvim
+  f_docker-compose.yml:
+    src: docker-compose.yml
+    dst: ~/docker-compose.yml
+    chmod: '600'
 profiles:
   base:
     dotfiles:
@@ -77,3 +87,8 @@ profiles:
     - d_rofi
     - d_x11
     - d_gtk-3.0
+  dev:
+    dotfiles:
+    - d_git
+    - d_nvim
+    - f_docker-compose.yml
