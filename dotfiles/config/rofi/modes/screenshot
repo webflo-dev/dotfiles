@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+
+declare -A mode
+declare -A all_modes
+
+mode=( [text]="Area" [icon]="" [info]="area" [cmd]="" [confirm]="no")
+all_modes[area]=$(declare -p mode)
+
+mode=( [text]="Window" [icon]="" [info]="window" [cmd]="" [confirm]="no" )
+all_modes[window]=$(declare -p mode)
+
+mode=( [text]="Desktop" [icon]="" [info]="desktop" [cmd]="" [confirm]="no")
+all_modes[desktop]=$(declare -p mode)
+
+declare -a modes=( "area" "window" "desktop" )
+
+
+rofi_options(){
+    echo -e "\0$1\x1f$2"
+}
+
+rofi_entry(){
+    echo -en "$1\0icon\x1f<span>$2</span>\x1finfo\x1f$3\n"
+}
+
+
+rofi_options "no-custom" true
+rofi_options "markup-rows" true
+
+case "$ROFI_RETV" in
+    0)
+        for i in "${modes[@]}"; do
+            eval "${all_modes[$i]}"
+            rofi_entry "${mode["text"]}" "${mode["icon"]}" "${mode["info"]}"
+        done
+    ;;
+    1)
+        case "$@" in
+            Yes)
+                for i in "${modes[@]}"; do
+                    eval "${all_modes[$i]}"
+                    if [[ "${mode[info]}" == "$ROFI_INFO" ]]; then
+                        cmd=${mode["cmd"]}
+                        if [[ -n "$cmd" ]]; then
+                          $cmd
+                        else
+                          echo ${mode[info]} 1>&2
+                        fi
+                        exit 0
+                    fi
+                done
+                exit 0
+            ;;
+            cancel)
+                exit 0
+            ;;
+            *)
+                for i in "${modes[@]}"; do
+                    eval "${all_modes[$i]}"
+                    if [[ ${mode[info]} == "$ROFI_INFO" ]]; then
+                        if [[ "${mode[confirm]}" == "yes" ]]; then
+                            rofi_options "message" "${mode[text]} ?"
+                            rofi_entry "Yes" "\ue92b" "$ROFI_INFO"
+                            rofi_entry "Cancel" "\uea11" "cancel"
+                            exit 0
+                        else
+                            cmd=${mode[cmd]}
+                            if [[ -n "$cmd" ]]; then
+                              $cmd
+                            else
+                              echo ${mode[info]} 1>&2
+                            fi
+                            exit 0
+                        fi
+                    fi
+                done
+                exit 0
+            ;;
+        esac
+    ;;
+esac
+

@@ -1,0 +1,29 @@
+Xft.antialias: 1
+Xft.hinting: 1
+Xft.autohint: 0
+Xft.rgba: rgb
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
+
+! DPI DELL G3223Q
+!Xft.dpi: 137
+
+! DPI normal
+Xft.dpi:   96
+
+! DPI 25% higher
+!Xft.dpi: 120
+
+! DPI 50% higher
+!Xft.dpi: 144
+
+! PDI 75% higher
+!Xft.dpi: 168
+
+! DPI 100% higher
+!Xft.dpi: 192
+
+#include "summer.xresources"
+
+

@@ -1,0 +1,61 @@
+
+*.red:	            #CF3746
+*.orange:	          #DF7C2C
+*.yellow:	          #ECBD10
+*.lime:             #7CBD27
+*.green:            #41A36F
+*.sky:              #32B5C7
+*.blue:	            #277AB6
+*.purple:	          #AD4ED2
+*.brown:            #776550
+
+
+*.pastel_red:	      #D95473
+*.pastel_orange:    #E6A168
+*.pastel_yellow:    #E7CA62
+*.pastel_lime:      #B6DA74
+*.pastel_green:     #78D4A3
+*.pastel_sky:  	    #65CEDC
+*.pastel_blue: 	    #64A8D8
+*.pastel_purple:    #BC82D3
+*.pastel_brown:	    #AA9277
+
+
+*.darker:	   	      #1D1D1D
+*.dark:	    	      #292A2B
+*.gray:	    	      #626861
+*.light_gray:	      #AEB7B6
+*.light:	    	    #D8E2E1
+
+
+*.primary:          #7CBD27
+*.secondary:	      #32B5C7
+*.urgent:	          #CF3746
+!*.background:		    #292A2B
+*.text:             #D8E2E1
+
+
+! Standard name
+*.foreground:   #D8E2E1
+*.background:   #292A2B
+*.cursorColor:  #D8E2E1
+*.dimColor:     #626861
+
+*.color0:       #1D1D1D
+*.color1:       #CF3746
+*.color2:       #7CBD27
+*.color3:       #ECBD10
+*.color4:       #277AB6
+*.color5:       #AD4ED2
+*.color6:       #32B5C7
+*.color7:       #626861
+
+*.color8:       #292A2B
+*.color9:       #D95473
+*.color10:      #B6DA74
+*.color11:      #E7CA62
+*.color12:      #64A8D8
+*.color13:      #BC82D3
+*.color14:      #65CEDC
+*.color15:      #D8E2E1
+

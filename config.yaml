@@ -38,6 +38,22 @@ dotfiles:
     src: config/pulsemixer.cfg
     dst: ~/.config/pulsemixer.cfg
     chmod: '755'
+  d_awesome:
+    src: config/awesome
+    dst: ~/.config/awesome
+  d_picom:
+    src: config/picom
+    dst: ~/.config/picom
+  d_rofi:
+    src: config/rofi
+    dst: ~/.config/rofi
+  d_x11:
+    src: config/X11
+    dst: ~/.config/X11
+  d_gtk-3.0:
+    src: config/gtk-3.0
+    dst: ~/.config/gtk-3.0
+    chmod: '700'
 profiles:
   base:
     dotfiles:
@@ -54,3 +70,10 @@ profiles:
     - d_neofetch
     - d_ranger
     - f_pulsemixer.cfg
+  X11:
+    dotfiles:
+    - d_awesome
+    - d_picom
+    - d_rofi
+    - d_x11
+    - d_gtk-3.0
