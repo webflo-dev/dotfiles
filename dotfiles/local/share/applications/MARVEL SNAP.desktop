@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=MARVEL SNAP
+Comment=Play this game on Steam
+Exec=steam steam://rungameid/1997040
+Icon=steam_icon_1997040
+Terminal=false
+Type=Application
+Categories=Game;

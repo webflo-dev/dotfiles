@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=BTOP
+Terminal=false
+Icon=system
+Exec=terminal --float --command btop
+Categories=System;
+Encoding=UTF-8
+Keywords=Tools;System
+

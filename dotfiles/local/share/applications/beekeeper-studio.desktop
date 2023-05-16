@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Beekeeper Studio
+Terminal=false
+Icon=system
+Exec=beekeeper
+Categories=Database;
+Encoding=UTF-8
+Keywords=Tools;Database
+

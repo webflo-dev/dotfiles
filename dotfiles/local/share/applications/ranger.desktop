@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Ranger
+Terminal=false
+Icon=applications-system
+Exec=terminal --float --title ranger --command ranger
+Categories=Accessories;
+Encoding=UTF-8;
+Keywords=Utilities;Explorer;
+
+

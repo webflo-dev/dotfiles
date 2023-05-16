@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Pulsemixer
+Terminal=false
+Icon=applications-system
+Exec=terminal --float --title pulsemixer --command pulsemixer
+Categories=Accessories;
+Encoding=UTF-8
+Keywords=Utilities;Audio;
+
+

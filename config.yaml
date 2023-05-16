@@ -64,6 +64,16 @@ dotfiles:
     src: docker-compose.yml
     dst: ~/docker-compose.yml
     chmod: '600'
+  f_microsoft-edge-stable-flags.conf:
+    src: config/microsoft-edge-stable-flags.conf
+    dst: ~/.config/microsoft-edge-stable-flags.conf
+  f_mimeapps.list:
+    src: config/mimeapps.list
+    dst: ~/.config/mimeapps.list
+    chmod: '600'
+  d_applications:
+    src: local/share/applications
+    dst: ~/.local/share/applications
 profiles:
   base:
     dotfiles:
@@ -92,3 +102,8 @@ profiles:
     - d_git
     - d_nvim
     - f_docker-compose.yml
+  desktop:
+    dotfiles:
+    - f_microsoft-edge-stable-flags.conf
+    - f_mimeapps.list
+    - d_applications

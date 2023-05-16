@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=nmtui
+Terminal=false
+Icon=system
+Exec=terminal --float --title nmtui --command nmtui
+Categories=System;Network
+Encoding=UTF-8
+Keywords=Tools;System;Network
+

@@ -1,0 +1,17 @@
+[MIME Cache]
+application/pdf=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+application/rdf+xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+application/rss+xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+application/xhtml+xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+application/xhtml_xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+application/xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+image/gif=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+image/jpeg=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+image/png=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+image/webp=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+text/html=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+text/xml=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+x-scheme-handler/http=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+x-scheme-handler/https=microsoft-edge-castor.desktop;microsoft-edge-webflo.desktop;
+x-scheme-handler/steam=steam.desktop;
+x-scheme-handler/steamlink=steam.desktop;

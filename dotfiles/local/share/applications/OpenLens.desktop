@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=OpenLens
+Terminal=false
+Icon=system
+Exec=/home/florent/Downloads/OpenLens-6.4.3.x86_64.AppImage
+Categories=Castor;
+Encoding=UTF-8
+Keywords=Tools;DevOps
+MimeType=x-scheme-handler/lens;
