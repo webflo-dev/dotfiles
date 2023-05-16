@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+file="${XDG_VIDEOS_DIR:-~}/screenrecord_$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+
+
+notify() {
+  dunstify -u low --replace=699 --appname=Screenrecord -i "$file" "Screenrecord" "Screenrecord has been saved."
+}
+
+case $1 in
+	--help|-h)
+		echo "usage: screenrecord [OPTIONS]
+		
+OPTIONS
+    --area
+"
+  ;;
+  --area | *)
+    slop=$(slop -b 4  -f "%x %y %w %h %g %i") || exit 1
+    read -r X Y W H G ID <<< $slop
+    ffmpeg -f x11grab -s "$W"x"$H" -i :0.0+$X,$Y  $file
+    notify
+  ;;
+esac

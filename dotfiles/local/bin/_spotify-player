@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+
+cmd_exist() { unalias "$1" >/dev/null 2>&1 ; command -v "$1" >/dev/null 2>&1 ;}
+__kill() { kill -9 "$(pidof "$1")" >/dev/null 2>&1 ; }
+__start() { sleep 1 && "$@" >/dev/null 2>&1 & }
+__running() { pidof "$1" >/dev/null 2>&1 ;}
+
+
+subscribe() {
+    local firstRun=0
+
+    # Listen for changes and immediately create new output for the bar.
+    # This is faster than having the script on an interval.
+    # playerctl -p spotify --follow $1 --format $2 2>/dev/null | {
+    playerctl -p spotify --follow $1 ${2:+--format "$2"}  | {
+        while true; do
+            {
+                # If this is the first time just continue and print the current
+                # state. Otherwise wait for events. This is to prevent the
+                # module being empty until an event occurs.
+                if [ $firstRun -eq 0 ]; then
+                    firstRun=1
+                else
+                    read -r event || break
+                fi
+            } &>/dev/null
+            subscribe_output event
+        done
+    }
+}
+
+subscribe_output() {
+  echo "$event"
+}
+
+case "$1" in
+    --start)
+      if  ! __running spotify; then 
+        __start spotify
+      fi
+    ;;
+    --is-started)
+      pidof spotify >/dev/null
+      [[ "$?" == "0" ]] && echo "1" || echo "0";
+    ;;
+    --play)
+      playerctl -p spotify play
+    ;;
+    --pause)
+      playerctl -p spotify pause
+    ;;
+    --toggle-play)
+      playerctl -p spotify play-pause
+    ;;
+    --next)
+      playerctl -p spotify next
+    ;;
+    --previous)
+      playerctl -p spotify previous
+    ;;
+    --forward)
+      playerctl -p spotify position 10+
+    ;;
+    --rewind)
+      playerctl -p spotify position 10-
+    ;;
+    --subscribe)
+      subscribe $2 "$3"
+    ;;
+	*)
+		echo "usage: spotify-player [OPTIONS]
+		
+OPTIONS
+    --start
+    --is-started
+    --play
+    --pause
+    --toggle-play
+    --next
+    --previous
+    --forward
+    --rewind
+    --subscribe [status, metadata] [format]
+"
+	;;
+esac

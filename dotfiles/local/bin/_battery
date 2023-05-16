@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+battery_value() {
+	cat /sys/class/power_supply/BAT0/capacity
+    # acpi | sed 's/^.*ing, //' | sed 's/\%.*//'
+}
+battery_status() {
+	cat /sys/class/power_supply/BAT0/status
+    # acpi | awk '{print $3}' | sed 's/\,//'
+}
+
+battery_icon(){
+    value=$(battery_value)
+    if [[ "${value}" -ge 95 ]] ; then
+        bat_icon=""
+    elif [[ "${value}" -ge 75 ]] ; then
+        bat_icon=""
+    elif [[ "${value}" -ge 50 ]] ; then
+        bat_icon=""
+    elif [[ "${value}" -ge 25 ]] ; then
+        bat_icon=""
+    else
+        bat_icon=""
+    fi
+
+    if [[ "${charge_status}" == "Charging" ]] ; then
+        bat_icon+=""
+    fi
+
+    echo "${bat_icon}"
+}
+
+
+case $1 in
+    --status)
+        battery_status
+    ;;
+    --value)
+        [[ $2 == "--percentage" ]] && echo "$(battery_value)%" || battery_value
+    ;;
+    --icon)
+        battery_icon
+    ;;
+    full | --full)
+        icon=$(battery_icon)
+        value=$(battery_value)
+        printf "%s" "${icon}" " ${value}%"
+    ;;
+    *)
+        echo "usage: battery [OPTIONS]
+		
+OPTIONS
+   --status
+   --value [--percentage]
+   --icon
+   --full
+"
+    ;;
+esac

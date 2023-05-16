@@ -1,0 +1,24 @@
+#!/bin/sh
+
+trash_dir=$XDG_DATA_HOME/Trash
+
+case "$1" in
+    --list)
+	ls -la $trash_dir/files
+    ;;
+    --clean)
+        if [ -x /bin/trash-empty ]; then
+            trash-empty
+        else 
+            rm -rf $trash_dir/files
+            rm -rf $trash_dir/info
+            mkdir $trash_dir/files
+            mkdir $trash_dir/info
+        fi
+        echo "0"
+        ;;
+    *)
+        nfiles=$(find $trash_dir/files/ -maxdepth 1 | wc -l)
+        echo $((nfiles-1))
+        ;;
+    esac

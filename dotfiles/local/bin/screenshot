@@ -1,0 +1,94 @@
+#!/bin/bash
+
+iDIR="$HOME/.config/dunst/icons"
+notify_cmd="notify-send -h string:x-canonical-private-synchronous:screenshot-notify -t 3000 -u low -i ${iDIR}/picture.png"
+notify_cmd_error="notify-send -h string:x-canonical-private-synchronous:screenshot-notify -t 3000 -u critical -i ${iDIR}/picture.png"
+
+check_command(){
+  if ! command -v $1 &> /dev/null
+  then
+    $notify_cmd "'$1' is not installed."
+    exit 1
+  fi
+}
+
+
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  check_command grim
+  check_command slurp
+else
+  check_command maim
+fi
+
+
+notify() {
+	# ${notify_cmd} "Copied to clipboard."
+	# feh ${dir}/"$file"
+  ${notify_cmd} "Screenshot Saved."
+}
+
+
+die() {
+  message=${1:-Bye}
+  $notify_cmd_error "Error: $message"
+  exit 2
+}
+
+take_screenshot_wayland(){
+  file=$1
+  geometry=$2
+  grim -c ${geometry:+-g "$geometry"} "$file" || die "Unable to invoke grim"
+}
+take_screenshot_X11(){
+  file=$1
+  geometry=$2
+  maim -f png ${geometry:+-s -b 4} "$file"
+}
+
+take_screenshot_area(){
+  if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+    geometry=$(slurp -b 1B1F28CC -c E06B74ff -s C778DD0D -w 2) || exit 0
+    take_screenshot_wayland "$file" "$geometry"
+  else
+    take_screenshot_X11 "$file" -
+  fi
+}
+
+take_screenshot_desktop(){
+  if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+    take_screenshot_wayland "$file"
+  else
+    take_screenshot_X11 "$file"
+  fi
+}
+
+target_dir=$XDG_PICTURES_DIR/Screenshots
+mkdir -p $target_dir
+file="$target_dir/screenshot_$(date +'%Y-%m-%d_%H-%M-%S').png"
+
+case $1 in
+  --area)
+    sleep 0.5 
+    take_screenshot_area || die "Can't screenshot area"
+    notify
+  ;;
+  --desktop)
+    sleep 0.5
+    take_screenshot_desktop || die "Can't screenshot desktop"
+    notify
+  ;;
+  # --window)
+  #   create_target_dir
+  #   maim -f png -i $(xdotool getactivewindow) "$file" && notify || exit 1
+  #   # maim -f png -i $(xdotool getactivewindow) "$file"
+  #   # [[ "$?" == "0" ]] && notify || exit 1
+  # ;;
+	--help | -h | *)
+		echo "usage: screenshot [OPTIONS]
+		
+OPTIONS
+    --area
+    --desktop
+"
+	;;  
+esac

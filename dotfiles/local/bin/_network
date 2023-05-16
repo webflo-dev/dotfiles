@@ -1,0 +1,11 @@
+#!/usr/bin/env -S zx --quiet --experimental
+
+const type = process.argv[5]; // node + zx + (zx args) + exec name
+
+const nmcli = JSON.parse(await $`nmcli --fields name,type,device connection show --active | jc --nmcli`);
+if (type) {
+    const info = nmcli.find(data => data.type === type);
+    info ? echo(JSON.stringify(info)) : echo("");
+} else {
+    echo(nmcli)
+}

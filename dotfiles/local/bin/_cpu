@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+get_load(){
+    grep -o "^[^ ]*" /proc/loadavg
+}
+
+case $1 in
+    --value)
+        value=$(get_load)
+        [[ $2 == "--percentage" ]] && printf "%s%%" $value || printf "%s" $value
+    ;;
+    --temp)
+        value=$(sensors | awk '/^Core /{++r; gsub(/[^[:digit:]]+/, "", $3); s+=$3} END{print s/(10*r) "°C"}')
+        [[ $2 == "--icon" ]] && printf " %s" $value || printf "%s" $value
+    ;;
+    *)
+        echo "usage: cpu [OPTIONS]
+		
+OPTIONS
+   --value [--percentage]
+   --temp [--icon]
+"
+    ;;
+esac

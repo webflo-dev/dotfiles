@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+gsettings set org.gnome.desktop.interface gtk-theme 'Qogirr-Dark'
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
+gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
+gsettings set org.gnome.desktop.interface font-name 'Sans 12'
+
+# SCHEMA='gsettings set org.gnome.desktop.interface'
+
+# apply_themes () {
+# 	${SCHEMA} gtk-theme "$THEME"
+# 	${SCHEMA} icon-theme "$ICONS"
+# 	${SCHEMA} cursor-theme "$CURSOR"
+# 	${SCHEMA} font-name "$FONT"
+# }
+
+# apply_themes

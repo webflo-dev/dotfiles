@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+notify_cmd='notify-send -h string:x-canonical-private-synchronous:sys-notify -u low'
+
+
+check_command(){
+  if ! command -v $1 &> /dev/null
+  then
+    $notify_cmd "'$1' is not installed."
+    exit 1
+  fi
+}
+
+launcher_wayland(){
+  check_command wofi
+
+  THEME=default
+  CONFIG="$XDG_CONFIG_HOME/wofi/$THEME/config"
+  STYLE="$XDG_CONFIG_HOME/wofi/$THEME/style.css"
+  COLORS="$XDG_CONFIG_HOME/wofi/$THEME/colors"
+
+  wofi --show drun --prompt 'Search...' --conf ${CONFIG} --style ${STYLE} --color ${COLORS}
+}
+
+launcher_X11(){
+  check_command rofi
+
+  rofi -modi "drun" -show drun -theme "layouts/launcher.rasi"
+}
+
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  launcher_wayland
+else
+  launcher_X11
+fi

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+mode_dir=$XDG_CONFIG_HOME/rofi/modes
+
+
+run_screenshot(){
+    prompt="Screenshot"
+    message=$(screenshot --get-target-dir)
+
+    option1=""
+    option2=""
+    option3=""
+
+    screenshot_mode=$(echo -e "$option1\n$option2\n$option3" | rofi -dmenu -p $prompt -mesg $message -markup-rows -no-custom  \
+        -theme "layouts/screenshot.rasi")
+    [[ "$screenshot_mode" == "$option1" ]] && screenshot --area
+    [[ "$screenshot_mode" == "$option2" ]] && screenshot --window
+    [[ "$screenshot_mode" == "$option3" ]] && screenshot --desktop
+}
+
+case $1 in
+    --launcher)
+        rofi -modi "drun" -show drun -theme "layouts/launcher.rasi"
+    ;;
+    --window)
+        rofi -modi "window" -show window -theme "layouts/launcher.rasi"
+    ;;
+    --power)
+        rofi -modi "power:$mode_dir/powermenu" -show power 
+    ;;
+    --screenshot)
+        screenshot_mode=$(rofi -modi "screenshot:$mode_dir/screenshot" -show screenshot  -theme "layouts/screenshot.rasi" 2>&1)
+        [[ -n "$screenshot_mode" ]] && screenshot --${screenshot_mode}
+    ;;
+    --modi)
+        mode=${2%%,*}
+        rofi -modi "$2:$mode_dir/$2" -show $mode -theme "layouts/$mode.rasi"
+    ;;
+    *)
+        echo "usage: menu [OPTIONS]
+		
+OPTIONS
+   --launcher
+   --window
+   --power
+   --modi [name]
+"
+    ;;
+esac

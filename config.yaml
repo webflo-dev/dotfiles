@@ -3,4 +3,35 @@ config:
   create: true
   dotpath: dotfiles
 dotfiles:
+  d_bin:
+    src: local/bin
+    dst: ~/.local/bin
+  f_fonts-list.md:
+    src: local/share/fonts/fonts-list.md
+    dst: ~/.local/share/fonts/fonts-list.md
+  f_smoke-test.sh:
+    src: local/share/fonts/smoke-test.sh
+    dst: ~/.local/share/fonts/smoke-test.sh
+    chmod: '755'
+  f_fonts.conf:
+    src: config/fontconfig/fonts.conf
+    dst: ~/.config/fontconfig/fonts.conf
+  d_zsh:
+    src: config/zsh
+    dst: ~/.config/zsh
+  f_starship.toml:
+    src: config/starship.toml
+    dst: ~/.config/starship.toml
+  d_kitty:
+    src: config/kitty
+    dst: ~/.config/kitty
 profiles:
+  base:
+    dotfiles:
+    - d_bin
+    - f_fonts-list.md
+    - f_smoke-test.sh
+    - f_fonts.conf
+    - d_zsh
+    - f_starship.toml
+    - d_kitty

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+/usr/bin/nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings

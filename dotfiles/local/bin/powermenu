@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+
+notify_cmd='notify-send -h string:x-canonical-private-synchronous:sys-notify -u low'
+
+check_command(){
+  if ! command -v $1 &> /dev/null
+  then
+    $notify_cmd "'$1' is not installed."
+    exit 1
+  fi
+}
+
+open_menu () {
+	lock=" Lock"
+	logout=" Logout"
+	shutdown=" Shutdown"
+	reboot=" Reboot"
+
+	yes=' Yes'
+	no=' No'
+
+	options="$lock\n$logout\n$shutdown\n$reboot"
+	chosen="$(echo -e "$options" | $1)"
+	case $chosen in
+		$lock)
+			$HOME/.local/bin/lockscreen
+			;;
+		$logout)
+			$HOME/.local/bin/logout
+			;;
+		$shutdown)
+			run_confirm "$2" "systemctl poweroff"
+			;;
+		$reboot)
+			run_confirm "$2" "systemctl reboot"
+			;;
+	esac
+}
+
+run_confirm(){
+	if [[ "$(confirm_menu "$1")" == "$yes" ]]; then
+		exec $2
+	else
+		exit
+	fi
+}
+
+confirm_menu(){
+	echo -e "$no\n$yes" | $1
+}
+
+powermenu_wayland(){
+	check_command wofi
+
+	THEME="default"
+	CONFIG="$XDG_CONFIG_HOME/wofi/$THEME/config"
+	STYLE="$XDG_CONFIG_HOME/wofi/$THEME/style.css"
+	COLORS="$XDG_CONFIG_HOME/wofi/$THEME/colors"
+
+	menu_command="wofi --show dmenu \
+				--conf ${CONFIG} --style ${STYLE} --color ${COLORS} \
+				--cache-file=/dev/null \
+				--hide-scroll --no-actions \
+				--insensitive"
+
+	confirm_command="wofi --show dmenu \
+				--conf ${CONFIG} --style ${STYLE} --color ${COLORS} \
+				--cache-file=/dev/null \
+				--hide-scroll --no-actions \
+				--define=hide_search=true \
+				--prompt 'Confirm?'"
+
+	open_menu "$menu_command" "$confirm_command"
+}
+
+menu_cmd_X11(){
+	rofi -dmenu
+}
+confirm_cmd_X11() {
+	rofi -theme-str 'window {location: center; anchor: center; fullscreen: false; width: 250px;}' \
+		-theme-str 'mainbox {children: [ "message", "listview" ];}' \
+		-theme-str 'listview {columns: 2; lines: 1;}' \
+		-theme-str 'element-text {horizontal-align: 0.5;}' \
+		-theme-str 'textbox {horizontal-align: 0.5;}' \
+		-dmenu \
+		-p 'Confirmation' \
+		-mesg 'Are you Sure?'
+}
+powermenu_X11(){
+	check_command rofi
+	open_menu menu_cmd_X11 confirm_cmd_X11
+}
+
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  powermenu_wayland
+else
+  powermenu_X11
+fi
