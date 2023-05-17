@@ -1,0 +1,11 @@
+[arch]
+volta-bin
+visual-studio-code-bin
+
+# OBS stuff
+obs-studio-browser
+cef-minimal-obs-bin
+
+mprocs
+languagetool-rust
+# dbgate-bin

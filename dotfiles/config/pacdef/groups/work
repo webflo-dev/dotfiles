@@ -1,0 +1,8 @@
+[arch]
+slack-desktop
+vanta-agent
+1password
+busybox
+# docker # use podman instead ?
+kubectl
+postgresql

@@ -12,7 +12,7 @@ dotfiles:
   f_smoke-test.sh:
     src: local/share/fonts/smoke-test.sh
     dst: ~/.local/share/fonts/smoke-test.sh
-    chmod: '755'
+    chmod: "755"
   f_fonts.conf:
     src: config/fontconfig/fonts.conf
     dst: ~/.config/fontconfig/fonts.conf
@@ -37,7 +37,7 @@ dotfiles:
   f_pulsemixer.cfg:
     src: config/pulsemixer.cfg
     dst: ~/.config/pulsemixer.cfg
-    chmod: '755'
+    chmod: "755"
   d_awesome:
     src: config/awesome
     dst: ~/.config/awesome
@@ -53,7 +53,7 @@ dotfiles:
   d_gtk-3.0:
     src: config/gtk-3.0
     dst: ~/.config/gtk-3.0
-    chmod: '700'
+    chmod: "700"
   d_git:
     src: config/git
     dst: ~/.config/git
@@ -63,14 +63,14 @@ dotfiles:
   f_docker-compose.yml:
     src: docker-compose.yml
     dst: ~/docker-compose.yml
-    chmod: '600'
+    chmod: "600"
   f_microsoft-edge-stable-flags.conf:
     src: config/microsoft-edge-stable-flags.conf
     dst: ~/.config/microsoft-edge-stable-flags.conf
   f_mimeapps.list:
     src: config/mimeapps.list
     dst: ~/.config/mimeapps.list
-    chmod: '600'
+    chmod: "600"
   d_applications:
     src: local/share/applications
     dst: ~/.local/share/applications
@@ -83,45 +83,52 @@ dotfiles:
   f_libinput-gestures.conf:
     src: config/libinput-gestures.conf
     dst: ~/.config/libinput-gestures.conf
+  d_pacdef:
+    src: config/pacdef
+    dst: ~/.config/pacdef
 profiles:
   base:
     dotfiles:
-    - d_bin
-    - f_fonts-list.md
-    - f_smoke-test.sh
-    - f_fonts.conf
-    - d_zsh
-    - f_starship.toml
-    - d_kitty
+      - d_bin
+      - f_fonts-list.md
+      - f_smoke-test.sh
+      - f_fonts.conf
+      - d_zsh
+      - f_starship.toml
+      - d_kitty
+      - d_pacdef
   cli:
     dotfiles:
-    - d_btop
-    - d_neofetch
-    - d_ranger
-    - f_pulsemixer.cfg
+      - d_btop
+      - d_neofetch
+      - d_ranger
+      - f_pulsemixer.cfg
   X11:
     dotfiles:
-    - d_awesome
-    - d_picom
-    - d_rofi
-    - d_x11
-    - d_gtk-3.0
+      - d_awesome
+      - d_picom
+      - d_rofi
+      - d_x11
+      - d_gtk-3.0
   dev:
     dotfiles:
-    - d_git
-    - d_nvim
-    - f_docker-compose.yml
+      - d_git
+      - d_nvim
+      - f_docker-compose.yml
   desktop:
     dotfiles:
-    - f_microsoft-edge-stable-flags.conf
-    - f_mimeapps.list
-    - d_applications
+      - f_microsoft-edge-stable-flags.conf
+      - f_mimeapps.list
+      - d_applications
   hyprland:
     dotfiles:
-    - d_hypr
+      - d_hypr
   qtile:
     dotfiles:
-    - d_qtile
+      - d_qtile
   laptop:
     dotfiles:
-    - f_libinput-gestures.conf
+      - f_libinput-gestures.conf
+  bureau:
+    dotfiles:
+      - d_pacdef

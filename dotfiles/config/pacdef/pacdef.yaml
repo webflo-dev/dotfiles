@@ -1,0 +1,4 @@
+aur_helper: paru
+aur_rm_args: null
+warn_not_symlinks: false
+disabled_backends: []

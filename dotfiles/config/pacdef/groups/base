@@ -1,0 +1,44 @@
+[arch]
+
+# system
+base-devel
+lnav
+man-db
+man-pages
+pacdef
+
+# network
+network-manager-applet
+
+# audio
+noise-suppression-for-voice
+pulsemixer
+
+# languages
+go
+python
+python-pip
+
+# shell
+starship
+zsh
+
+# cli
+bat
+btop
+duf
+exa
+fd
+gdu
+git-delta
+grep
+mpv
+neovim
+playerctl
+ranger
+ripgrep
+sshfs
+tldr
+topgrade
+unzip
+

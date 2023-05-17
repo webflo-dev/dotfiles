@@ -1,0 +1,7 @@
+[arch]
+brightnessctl 
+light
+upower # power
+libinput-gestures # touchpad gestures
+acpi # power
+acpid # power
