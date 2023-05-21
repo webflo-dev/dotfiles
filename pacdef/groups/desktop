@@ -29,7 +29,7 @@ file-roller
 spotify
 microsoft-edge-stable-bin
 firefox
-companion # stream deck
+# companion # stream deck
 
 
 wmctrl # interact with X11
