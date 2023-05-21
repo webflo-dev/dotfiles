@@ -6,6 +6,7 @@ lnav
 man-db
 man-pages
 pacdef
+topgrade
 
 # network
 network-manager-applet
@@ -22,6 +23,7 @@ python-pip
 # shell
 starship
 zsh
+fzf
 
 # cli
 bat
@@ -33,12 +35,15 @@ gdu
 git-delta
 grep
 mpv
-neovim
-playerctl
 ranger
 ripgrep
-sshfs
 tldr
-topgrade
 unzip
 
+# neovim and executable required by plugins 
+neovim
+volta-bin
+
+# misc.
+playerctl
+sshfs

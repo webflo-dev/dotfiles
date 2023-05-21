@@ -2,23 +2,33 @@ config:
   backup: true
   create: true
   dotpath: dotfiles
+  banner: false
+  chmod_on_import: true
+actions:
+  font-cache-refresh: fc-cache -f -v
+  libinput-gestures: sh ./actions/libinput-gestures.sh
+  pipewire: sh ./actions/pipewire.sh
+  xorg-conf: sh ./actions/xorg-conf.sh
+  zsh: sh ./actions/zsh.sh
 dotfiles:
   d_bin:
     src: local/bin
     dst: ~/.local/bin
+    chmod: 711
   f_fonts-list.md:
     src: local/share/fonts/fonts-list.md
     dst: ~/.local/share/fonts/fonts-list.md
   f_smoke-test.sh:
     src: local/share/fonts/smoke-test.sh
     dst: ~/.local/share/fonts/smoke-test.sh
-    chmod: "755"
   f_fonts.conf:
     src: config/fontconfig/fonts.conf
     dst: ~/.config/fontconfig/fonts.conf
   d_zsh:
     src: config/zsh
     dst: ~/.config/zsh
+    actions:
+      - zsh
   f_starship.toml:
     src: config/starship.toml
     dst: ~/.config/starship.toml
@@ -37,7 +47,8 @@ dotfiles:
   f_pulsemixer.cfg:
     src: config/pulsemixer.cfg
     dst: ~/.config/pulsemixer.cfg
-    chmod: "755"
+    actions:
+      - pipewire
   d_awesome:
     src: config/awesome
     dst: ~/.config/awesome
@@ -50,10 +61,11 @@ dotfiles:
   d_x11:
     src: config/X11
     dst: ~/.config/X11
+    actions:
+      - xorg-conf
   d_gtk-3.0:
     src: config/gtk-3.0
     dst: ~/.config/gtk-3.0
-    chmod: "700"
   d_git:
     src: config/git
     dst: ~/.config/git
@@ -63,14 +75,12 @@ dotfiles:
   f_docker-compose.yml:
     src: docker-compose.yml
     dst: ~/docker-compose.yml
-    chmod: "600"
   f_microsoft-edge-stable-flags.conf:
     src: config/microsoft-edge-stable-flags.conf
     dst: ~/.config/microsoft-edge-stable-flags.conf
   f_mimeapps.list:
     src: config/mimeapps.list
     dst: ~/.config/mimeapps.list
-    chmod: "600"
   d_applications:
     src: local/share/applications
     dst: ~/.local/share/applications
@@ -83,9 +93,18 @@ dotfiles:
   f_libinput-gestures.conf:
     src: config/libinput-gestures.conf
     dst: ~/.config/libinput-gestures.conf
-  d_pacdef:
-    src: config/pacdef
-    dst: ~/.config/pacdef
+    actions:
+      - libinput-gestures
+  d_font_luciole:
+    src: local/share/fonts/Luciole
+    dst: ~/.local/share/fonts/Luciole
+    actions:
+      - font-cache-refresh
+  d_font_cartograph:
+    src: local/share/fonts/Cartograph-CF
+    dst: ~/.local/share/fonts/Cartograph-CF
+    actions:
+      - font-cache-refresh
 profiles:
   base:
     dotfiles:
@@ -96,13 +115,19 @@ profiles:
       - d_zsh
       - f_starship.toml
       - d_kitty
-      - d_pacdef
-  cli:
-    dotfiles:
-      - d_btop
-      - d_neofetch
+      - d_font_luciole
+      - d_font_cartograph
       - d_ranger
       - f_pulsemixer.cfg
+      - d_btop
+      - d_neofetch
+      - d_git
+      - d_nvim
+  desktop:
+    dotfiles:
+      - f_microsoft-edge-stable-flags.conf
+      - f_mimeapps.list
+      - d_applications
   X11:
     dotfiles:
       - d_awesome
@@ -112,14 +137,7 @@ profiles:
       - d_gtk-3.0
   dev:
     dotfiles:
-      - d_git
-      - d_nvim
       - f_docker-compose.yml
-  desktop:
-    dotfiles:
-      - f_microsoft-edge-stable-flags.conf
-      - f_mimeapps.list
-      - d_applications
   hyprland:
     dotfiles:
       - d_hypr
@@ -129,6 +147,3 @@ profiles:
   laptop:
     dotfiles:
       - f_libinput-gestures.conf
-  bureau:
-    dotfiles:
-      - d_pacdef
