@@ -6,14 +6,15 @@ config:
   chmod_on_import: false
 actions:
   font-cache-refresh: fc-cache -f -v
-  base: sh $HOME/.dotfiles/actions/X11/setup.sh $HOME/.dotfiles/actions/zsh.sh $HOME/.dotfiles/actions/pipewire/setup.sh $HOME/.dotfiles/actions/volta.sh $HOME/.dotfiles/actions/gpg.sh
+  base: sh $HOME/.dotfiles/actions/X11/setup.sh $HOME/.dotfiles/actions/zsh.sh $HOME/.dotfiles/actions/pipewire/setup.sh
+    $HOME/.dotfiles/actions/volta.sh $HOME/.dotfiles/actions/gpg.sh
   laptop: sh $HOME/.dotfiles/actions/libinput-gestures.sh
   work: sh $HOME/.dotfiles/actions/vanta.sh $HOME/.dotfiles/actions/work.sh $HOME/.dotfiles/actions/docker-compose.sh
 dotfiles:
   d_bin:
     src: local/bin
     dst: ~/.local/bin
-    chmod: 711
+    chmod: '711'
   f_smoke-test.sh:
     src: local/share/fonts/smoke-test.sh
     dst: ~/.local/share/fonts/smoke-test.sh
@@ -65,6 +66,7 @@ dotfiles:
   f_docker-compose.yml:
     src: docker-compose.yml
     dst: ~/docker-compose.yml
+    chmod: '600'
   f_microsoft-edge-stable-flags.conf:
     src: config/microsoft-edge-stable-flags.conf
     dst: ~/.config/microsoft-edge-stable-flags.conf
@@ -87,47 +89,47 @@ dotfiles:
     src: local/share/fonts/Luciole
     dst: ~/.local/share/fonts/Luciole
     actions:
-      - font-cache-refresh
+    - font-cache-refresh
   d_font_cartograph:
     src: local/share/fonts/Cartograph-CF
     dst: ~/.local/share/fonts/Cartograph-CF
     actions:
-      - font-cache-refresh
+    - font-cache-refresh
 profiles:
   base:
     dotfiles:
-      - d_bin
-      - f_smoke-test.sh
-      - f_fonts.conf
-      - d_zsh
-      - f_starship.toml
-      - d_kitty
-      - d_font_luciole
-      - d_font_cartograph
-      - d_ranger
-      - f_pulsemixer.cfg
-      - d_btop
-      - d_neofetch
-      - d_git
-      - d_nvim
+    - d_bin
+    - f_smoke-test.sh
+    - f_fonts.conf
+    - d_zsh
+    - f_starship.toml
+    - d_kitty
+    - d_font_luciole
+    - d_font_cartograph
+    - d_ranger
+    - f_pulsemixer.cfg
+    - d_btop
+    - d_neofetch
+    - d_git
+    - d_nvim
   desktop:
     dotfiles:
-      - f_microsoft-edge-stable-flags.conf
-      - f_mimeapps.list
-      - d_applications
+    - f_microsoft-edge-stable-flags.conf
+    - f_mimeapps.list
+    - d_applications
   X11:
     dotfiles:
-      - d_X11
-      - d_gtk-3.0
-      - d_awesome
-      - d_picom
-      - d_rofi
+    - d_X11
+    - d_gtk-3.0
+    - d_awesome
+    - d_picom
+    - d_rofi
   work:
     dotfiles:
-      - f_docker-compose.yml
+    - f_docker-compose.yml
   laptop:
     dotfiles:
-      - f_libinput-gestures.conf
+    - f_libinput-gestures.conf
   # hyprland:
   #   dotfiles:
   #     - d_hypr

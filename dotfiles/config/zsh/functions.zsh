@@ -54,16 +54,3 @@ function which_term () {
      ## package version
      [ $found -eq 0 ] && echo "$term " $(dpkg -l $term | awk '/^ii/{print $3}')    
  }
-
-function dots(){
-  if [[ "$#" -eq 0 ]]; then
-    (cd /
-    for i in $(dotfiles ls-files); do
-      echo -n "$(dotfiles -c color.status=always status $i -s | sed "s#$i##")"
-      echo -e "¬/$i¬\e[0;33m$(dotfiles -c color.ui=always log -1 --format="%s" -- $i)\e[0m"
-    done
-    ) | column -t --separator=¬ -T2
-  else
-    dotfiles $*
-  fi
-}

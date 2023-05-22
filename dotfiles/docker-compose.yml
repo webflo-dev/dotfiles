@@ -15,8 +15,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
+      - DOCKER_HOST=$DOCKER_HOST
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
       - /home/florent/docker/portainer/data:/data
 
   dozzle:
@@ -24,9 +25,11 @@ services:
     container_name: dozzle
     restart: always
     ports:
-      - 90:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - 9005:8080
+    environment:
+      - DOCKER_HOST=$DOCKER_HOST
+    # volumes:
+    # - /var/run/docker.sock:/var/run/docker.sock
 
   pgadmin4:
     image: dpage/pgadmin4
@@ -39,41 +42,3 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=password
     volumes:
       - /home/florent/docker/pgadmin4/backup:/backup
-  # traefik:
-  #   image: traefik:v2.5
-  #   container_name: traefik
-  #   restart: unless-stopped
-  #   networks:
-  #     - traefik
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #     - 81:8080
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Europe/Paris
-  #   command:
-  #     - --accesslog=true
-  #     - --accesslog.filepath=/var/log/access.log
-  #     - --accesslog.fields.names.StartUTC=drop
-  #     - --global.sendAnonymousUsage=false
-  #     - --global.checknewversion=false
-  #     - --log.level=DEBUG
-  #     - --metrics.prometheus=false
-  #     - --api=true
-  #     - --api.dashboard=true
-  #     - --api.insecure=true
-  #     - --providers.docker=true
-  #     - --providers.docker.exposedbydefault=false
-  #     - --providers.docker.watch=true
-  #     - --providers.file.directory=/etc/traefik/config
-  #     - --providers.file.watch=true
-  #     - --entrypoints.http=true
-  #     - --entrypoints.http.address=:80
-  #     - --entrypoints.https=true
-  #     - --entrypoints.https.address=:443
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - /home/florent/docker/traefik/ssl/:/tools/certs:ro
-  #     - /home/florent/docker/traefik/config:/etc/traefik/config:ro

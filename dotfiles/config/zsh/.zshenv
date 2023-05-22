@@ -20,7 +20,10 @@ export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export _Z_DATA="$XDG_DATA_HOME/z"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export GOPATH="$XDG_DATA_HOME/go"
-export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+# export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export DOCKER_CONFIG=
+export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+export DOCKER_BUILDKIT=0
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
@@ -85,4 +88,5 @@ export HISTSIZE=5000
 export SAVEHIST=5000
 export HISTORY_IGNORE="(cd|ranger|r|exit|:q|kill|nvim)"
 
-source $ZDOTDIR/.env.private
+export DOTDROP_CONFIG=$HOME/.dotfiles/config.yaml
+

@@ -74,19 +74,13 @@
   trash = !git reset --hard HEAD && git clean -fd
 
   s = status -s
+  l= !git log --pretty=format:\"%C(green)%ad %C(yellow)%h%C(auto)%d %C(reset)%s  %C(cyan)<%C(blue)%cn%C(cyan)>%Creset\" --date=short
 
-  # Amend the currently staged files to the latest commit
   amend = commit --amend --reuse-message=HEAD
-
   unstage = "restore --staged"
 
   wip = "!f() { git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m \"[wip] [skip ci]\"; }; f"
   unwip = "!f() { git log -n 1 | grep -q -c ""[wip]"" && git reset HEAD~1; }; f"
-
-	# View abbreviated SHA, description, and history graph of the latest 20 commits
-	# pl = log --pretty=oneline -n 20 --graph --abbrev-commit
-  # l = !git log --pretty=format:\"%ad%C(red)%d %C(yellow)[%h] %C(green)%cn: %Creset%s \" --decorate --date=short
-  l= !git log --pretty=format:\"%C(green)%ad %C(yellow)%h%C(auto)%d %C(reset)%s  %C(cyan)<%C(blue)%cn%C(cyan)>%Creset\" --date=short
 
   # Interactive rebase with the given number of latest commits
   rbi = "!r() { git rebase -i HEAD~$1; }; r"
@@ -96,7 +90,6 @@
 
 	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
 	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
-
   
 	# Find branches containing commit
 	find-branch = "!f() { git branch -a --contains $1; }; f"
@@ -125,14 +118,9 @@
 
 
 
-[includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
-  path = $XDG_CONFIG_HOME/git/config-github
-
 [includeIf "hasconfig:remote.*.url:git@github.com:**/**"]
-  path = $XDG_CONFIG_HOME/git/config-github
+  path = ~/.config/git/config-github
 
-[includeIf "hasconfig:remote.*.url:git@github.com:castordoc/**"]
-  path = $XDG_CONFIG_HOME/git/config-castor
+[includeIf "hasconfig:remote.*.url:git@gitlab.com:castordoc/**"]
+  path = ~/.config/git/config-castor
 
-[includeIf "gitdir:~/dev/castor/"]
-  path = $XDG_CONFIG_HOME/git/config-castor
