@@ -1,0 +1,14 @@
+[arch]
+
+xorg-xinit
+
+# autostart programs
+gnome-keyring
+polkit-gnome
+
+# awesome
+awesome-git
+picom-simpleanims-git
+rofi
+maim # screenshot
+feh # image viewer

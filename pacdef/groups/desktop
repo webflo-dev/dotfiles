@@ -1,5 +1,7 @@
 [arch]
 
+xclip # clipboard
+
 # fonts
 noto-fonts-emoji
 ttf-nerd-fonts-symbols
@@ -7,14 +9,6 @@ ttf-nerd-fonts-symbols-mono
 font-manager 
 
 gtk4
-
-feh # image viewer
-
-maim # screenshot
-
-rofi
-
-xclip # clipboard
 
 kitty # terminal
 papirus-icon-theme # icons
@@ -25,12 +19,13 @@ thunar-archive-plugin
 thunar-media-tags-plugin
 thunar-volman
 file-roller
+gvfs
 
-spotify
+# spotify
 microsoft-edge-stable-bin
 firefox
 # companion # stream deck
-
+visual-studio-code-bin
 
 wmctrl # interact with X11
 xdotool # fake keyboard/mouse input, window management, and more

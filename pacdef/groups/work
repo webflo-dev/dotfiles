@@ -1,8 +1,12 @@
 [arch]
-slack-desktop
-vanta-agent
 1password
 busybox
 # docker # use podman instead ?
+# podman
+# podman-docker
+# podman-dnsname
 kubectl
+mprocs-bin
 postgresql
+slack-desktop
+vanta-agent

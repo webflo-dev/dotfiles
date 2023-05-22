@@ -3,21 +3,17 @@ config:
   create: true
   dotpath: dotfiles
   banner: false
-  chmod_on_import: true
+  chmod_on_import: false
 actions:
   font-cache-refresh: fc-cache -f -v
-  libinput-gestures: sh ./actions/libinput-gestures.sh
-  pipewire: sh ./actions/pipewire.sh
-  xorg-conf: sh ./actions/xorg-conf.sh
-  zsh: sh ./actions/zsh.sh
+  base: sh $HOME/.dotfiles/actions/X11/setup.sh $HOME/.dotfiles/actions/zsh.sh $HOME/.dotfiles/actions/pipewire/setup.sh $HOME/.dotfiles/actions/volta.sh $HOME/.dotfiles/actions/gpg.sh
+  laptop: sh $HOME/.dotfiles/actions/libinput-gestures.sh
+  work: sh $HOME/.dotfiles/actions/vanta.sh $HOME/.dotfiles/actions/work.sh $HOME/.dotfiles/actions/docker-compose.sh
 dotfiles:
   d_bin:
     src: local/bin
     dst: ~/.local/bin
     chmod: 711
-  f_fonts-list.md:
-    src: local/share/fonts/fonts-list.md
-    dst: ~/.local/share/fonts/fonts-list.md
   f_smoke-test.sh:
     src: local/share/fonts/smoke-test.sh
     dst: ~/.local/share/fonts/smoke-test.sh
@@ -27,8 +23,6 @@ dotfiles:
   d_zsh:
     src: config/zsh
     dst: ~/.config/zsh
-    actions:
-      - zsh
   f_starship.toml:
     src: config/starship.toml
     dst: ~/.config/starship.toml
@@ -47,8 +41,6 @@ dotfiles:
   f_pulsemixer.cfg:
     src: config/pulsemixer.cfg
     dst: ~/.config/pulsemixer.cfg
-    actions:
-      - pipewire
   d_awesome:
     src: config/awesome
     dst: ~/.config/awesome
@@ -58,11 +50,9 @@ dotfiles:
   d_rofi:
     src: config/rofi
     dst: ~/.config/rofi
-  d_x11:
+  d_X11:
     src: config/X11
     dst: ~/.config/X11
-    actions:
-      - xorg-conf
   d_gtk-3.0:
     src: config/gtk-3.0
     dst: ~/.config/gtk-3.0
@@ -93,8 +83,6 @@ dotfiles:
   f_libinput-gestures.conf:
     src: config/libinput-gestures.conf
     dst: ~/.config/libinput-gestures.conf
-    actions:
-      - libinput-gestures
   d_font_luciole:
     src: local/share/fonts/Luciole
     dst: ~/.local/share/fonts/Luciole
@@ -109,7 +97,6 @@ profiles:
   base:
     dotfiles:
       - d_bin
-      - f_fonts-list.md
       - f_smoke-test.sh
       - f_fonts.conf
       - d_zsh
@@ -130,20 +117,20 @@ profiles:
       - d_applications
   X11:
     dotfiles:
+      - d_X11
+      - d_gtk-3.0
       - d_awesome
       - d_picom
       - d_rofi
-      - d_x11
-      - d_gtk-3.0
-  dev:
+  work:
     dotfiles:
       - f_docker-compose.yml
-  hyprland:
-    dotfiles:
-      - d_hypr
-  qtile:
-    dotfiles:
-      - d_qtile
   laptop:
     dotfiles:
       - f_libinput-gestures.conf
+  # hyprland:
+  #   dotfiles:
+  #     - d_hypr
+  # qtile:
+  #   dotfiles:
+  #     - d_qtile

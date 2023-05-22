@@ -14,11 +14,11 @@ network-manager-applet
 # audio
 noise-suppression-for-voice
 pulsemixer
+wireplumber
 
 # languages
 go
-python
-python-pip
+
 
 # shell
 starship
@@ -28,13 +28,20 @@ fzf
 # cli
 bat
 btop
+choose
+croc # file transfer between 2 computer
 duf
 exa
 fd
 gdu
 git-delta
 grep
+grex
+imagemagick
+inxi
 mpv
+neofetch
+pipr-git
 ranger
 ripgrep
 tldr
@@ -42,6 +49,7 @@ unzip
 
 # neovim and executable required by plugins 
 neovim
+languagetool-rust
 volta-bin
 
 # misc.

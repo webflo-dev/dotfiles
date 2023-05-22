@@ -1,7 +1,17 @@
 [arch]
+
 brightnessctl 
 light
-upower # power
-libinput-gestures # touchpad gestures
-acpi # power
-acpid # power
+
+# touchpad
+libinput-gestures
+
+# power
+upower
+acpi
+acpid
+
+# bluetooth
+blueman
+bluez
+bluez-utils

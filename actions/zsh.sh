@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-mkdir -p $HOME/.local/state/zsh 
-sudo cp ./zsh/zshenv /etc/zsh/zshenv
+sudo mkdir -p /etc/zsh
+echo 'export ZDOTDIR=$HOME/.config/zsh' | sudo tee -a /etc/zsh/zshenv >/dev/null

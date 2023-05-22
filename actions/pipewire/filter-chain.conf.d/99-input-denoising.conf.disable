@@ -9,9 +9,9 @@ context.modules = [
                     type = ladspa
                     name = rnnoise
                     plugin = librnnoise_ladspa
-                    label = noise_suppressor_mono
+                    label = noise_suppressor_stereo
                     control = {
-                        "VAD Threshold (%)" 50.0
+                        "VAD Threshold (%)" 85.0
                         "VAD Grace Period (ms)" 200
                         "Retroactive VAD Grace (ms)" 0
                     }
