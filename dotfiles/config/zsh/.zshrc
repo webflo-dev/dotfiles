@@ -20,7 +20,7 @@ cdpath+=(
 )
 
 
-[ ! -e "$HISTFILE" ] && mkdir $(dirname $HISTFILE)
+[ ! -e "$HISTFILE" ] && mkdir -p $(dirname $HISTFILE)
 
 #―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 #  Options
