@@ -40,25 +40,33 @@ theme.colors = {
 	light_gray = "#AEB7B6",
 }
 
+local svg_dir = theme.theme_dir .. "svg/"
 theme.svg = {
-	clock = theme.theme_dir .. "svg/clock.svg",
-	gpu = theme.theme_dir .. "svg/gpu.svg",
-	calendar = theme.theme_dir .. "svg/calendar.svg",
-	cpu = theme.theme_dir .. "svg/cpu.svg",
-	ethernet = theme.theme_dir .. "svg/ethernet.svg",
-	ethernet_disconnected = theme.theme_dir .. "svg/ethernet-disconnected.svg",
-	ethernet_connecting = theme.theme_dir .. "svg/ethernet-connecting.svg",
-	wifi = theme.theme_dir .. "svg/wifi.svg",
-	wifi_disconnected = theme.theme_dir .. "svg/wifi-disconnected.svg",
-	wifi_connecting = theme.theme_dir .. "svg/wifi-connecting.svg",
-	memory = theme.theme_dir .. "svg/memory.svg",
-	microphone = theme.theme_dir .. "svg/microphone.svg",
-	microphone_mute = theme.theme_dir .. "svg/microphone-mute.svg",
-	volume = theme.theme_dir .. "svg/volume.svg",
-	volume_mute = theme.theme_dir .. "svg/volume-mute.svg",
+	clock = svg_dir .. "clock.svg",
+	gpu = svg_dir .. "gpu.svg",
+	calendar = svg_dir .. "calendar.svg",
+	cpu = svg_dir .. "cpu.svg",
+	ethernet = svg_dir .. "ethernet.svg",
+	ethernet_disconnected = svg_dir .. "ethernet-disconnected.svg",
+	ethernet_connecting = svg_dir .. "ethernet-connecting.svg",
+	wifi = svg_dir .. "wifi.svg",
+	wifi_disconnected = svg_dir .. "wifi-disconnected.svg",
+	wifi_connecting = svg_dir .. "wifi-connecting.svg",
+	memory = svg_dir .. "memory.svg",
+	microphone = svg_dir .. "microphone.svg",
+	microphone_mute = svg_dir .. "microphone-mute.svg",
+	volume = svg_dir .. "volume.svg",
+	volume_mute = svg_dir .. "volume-mute.svg",
 	circle = function(number)
-		return theme.theme_dir .. "svg/circle-" .. number .. "-solid.svg"
+		return svg_dir .. "circle-" .. number .. "-solid.svg"
 	end,
+	search = svg_dir .. "search.svg",
+	music = svg_dir .. "music.svg",
+	stop = svg_dir .. "stop.svg",
+	forward = svg_dir .. "forward.svg",
+	backward = svg_dir .. "backward.svg",
+	play = svg_dir .. "play.svg",
+	pause = svg_dir .. "pause.svg",
 }
 
 theme.accent_color = theme.colors.yellow

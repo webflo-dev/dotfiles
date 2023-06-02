@@ -11,12 +11,14 @@ local time = require("themes.spring.widgets.time")
 local system = require("themes.spring.widgets.system")
 local audio = require("themes.spring.widgets.audio")
 local network = require("themes.spring.widgets.network")
+local playerctl = require("themes.spring.widgets.playerctl")
 
 local function left(s)
 	return wibox.widget({
 		workspaces(s),
 		-- layout_box(s),
 		layout(s),
+		playerctl,
 		layout = wibox.layout.fixed.horizontal,
 		spacing = dpi(10),
 	})

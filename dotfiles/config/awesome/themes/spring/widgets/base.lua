@@ -21,7 +21,6 @@ function M.box(child)
 		shape = helperUI.rounded_shape(),
 		bg = beautiful.bg_normal,
 		border_color = beautiful.bg_focus,
-		-- border_color = beautiful.,
 		border_width = dpi(2),
 	})
 
@@ -46,7 +45,7 @@ function M.svg_template(image, color, id)
 end
 
 function M.svg(image, color, id)
-	local widget = wibox.widget(M.svg_template(image, color, id))
+	local widget = wibox.widget(M.svg_template(image or nil, color or beautiful.accent_color, id or nil))
 
 	function widget:change(new_image, new_color)
 		self:change_image(new_image)

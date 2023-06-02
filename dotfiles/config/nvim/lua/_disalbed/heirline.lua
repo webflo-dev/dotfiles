@@ -80,25 +80,25 @@ return {
 					condition = function(self)
 						return self.mode ~= "NORMAL"
 					end,
-					hl = function(self)
-						return {
-							fg = colors.bg_statusline,
-							bg = self.colors[self.mode].bg,
-						}
-					end,
-					Space,
-					{
-						fallthrough = false,
-						ReadOnly,
-						{ provider = icons.common.circle },
-					},
-					Space,
-					{
-						provider = function(self)
-							return self.mode
+					hl = { fg = colors.bg_statusline },
+					heirline.surround({ "", "" }, function(self)
+						return self.colors[self.mode].bg
+					end, {
+						hl = function(self)
+							return { bg = self.colors[self.mode].bg }
 						end,
-					},
-					Space,
+						{
+							fallthrough = false,
+							ReadOnly,
+							{ provider = icons.common.circle },
+						},
+						Space,
+						{
+							provider = function(self)
+								return self.mode
+							end,
+						},
+					}),
 				}
 
 				Mode = {
@@ -150,7 +150,6 @@ return {
 							NORMAL = { fg = colors.blue },
 							INSERT = { fg = colors.black, bg = colors.green },
 							VISUAL = { fg = colors.black, bg = colors.cyan },
-							["O-P"] = { fg = colors.black, bg = colors.blue },
 							["VISUAL LINES"] = { fg = colors.black, bg = colors.cyan },
 							["VISUAL BLOCK"] = { fg = colors.black, bg = colors.cyan },
 							COMMAND = { fg = colors.black, bg = colors.yellow },
@@ -170,7 +169,7 @@ return {
 				}
 			end
 
-			local FileNameBlock, WorkDir, CurrentPath, FileName
+			local FileNameBlock, CurrentPath, FileName
 			do
 				local FileIcon = {
 					condition = function()
@@ -191,33 +190,6 @@ return {
 					end,
 				}
 
-				WorkDir = {
-					condition = function(self)
-						if
-							utils.has_plugin("nvim-sessions")
-							and require("nvim-sessions").current_session_name() ~= nil
-						then
-							return false
-						end
-						if vim.bo.buftype == "" then
-							return self.pwd
-						end
-					end,
-					hl = { fg = heirline.get_highlight("Directory").fg },
-					flexible = 25,
-					{
-						provider = function(self)
-							return self.pwd
-						end,
-					},
-					{
-						provider = function(self)
-							return vim.fn.pathshorten(self.pwd)
-						end,
-					},
-					Null,
-				}
-
 				CurrentPath = {
 					condition = function(self)
 						if vim.bo.buftype == "" then
@@ -233,32 +205,10 @@ return {
 					},
 					{
 						provider = function(self)
-							return vim.fn.pathshorten(self.current_path, 6)
-						end,
-					},
-
-					{
-						provider = function(self)
-							return vim.fn.pathshorten(self.current_path, 5)
-						end,
-					},
-					{
-						provider = function(self)
-							return vim.fn.pathshorten(self.current_path, 4)
-						end,
-					},
-
-					{
-						provider = function(self)
-							return vim.fn.pathshorten(self.current_path, 3)
-						end,
-					},
-					{
-						provider = function(self)
 							return vim.fn.pathshorten(self.current_path, 2)
 						end,
 					},
-					{ provider = "" },
+					-- { provider = "" },
 				}
 
 				FileName = {
@@ -304,7 +254,6 @@ return {
 					end,
 					{
 						FileIcon,
-						WorkDir,
 						CurrentPath,
 						FileName,
 					},
@@ -315,49 +264,54 @@ return {
 
 			local SearchResults = {
 				condition = function(self)
-					local query = vim.fn.getreg("/")
-					if query == "" then
-						return
-					end
-
-					if query:find("@") then
-						return
-					end
-
 					local search_count = vim.fn.searchcount({ recompute = 1, maxcount = -1, timeout = 500 })
 					local active = false
-					if vim.v.hlsearch and vim.v.hlsearch == 1 then
+					if vim.v.hlsearch and vim.v.hlsearch == 1 and search_count.total and search_count.total > 0 then
 						active = true
-						-- search_count.total and search_count.total > 0 then
 					end
 					if not active then
 						return
 					end
-
-					query = query:gsub([[^\V]], "")
-					query = query:gsub([[\<]], ""):gsub([[\>]], "")
-
-					self.query = query
 					self.count = search_count
 					return true
 				end,
-				hl = {
-					fg = colors.bg_statusline,
-					bg = colors.cyan,
+				hl = { fg = colors.bg_statusline },
+				{
+					heirline.surround({ "", "" }, colors.cyan, {
+						provider = function(self)
+							return string.format("%s %d/%d", icons.common.search, self.count.current, self.count.total)
+						end,
+						hl = { bg = colors.cyan },
+					}),
+					Space,
 				},
-				provider = function(self)
-					if self.count.total == 0 then
-						return string.format(" %s %s %d ", icons.common.search, self.query, self.count.total)
-					end
+			}
 
-					return string.format(
-						" %s %s %d/%d ",
-						icons.common.search,
-						self.query,
-						self.count.current,
-						self.count.total
-					)
+			local Codeium = {
+				condition = function()
+					return utils.has_plugin("codeium.vim")
 				end,
+				init = function(self)
+					self.status = vim.fn["codeium#GetStatusString"]()
+				end,
+				heirline.surround({ "", "" }, colors.fg_gutter, {
+					provider = function(self)
+						return " " .. self.status
+					end,
+					hl = function(self)
+						local hl = {
+							fg = heirline.get_highlight("Statusline").fg,
+							bg = colors.fg_gutter,
+						}
+						if self.status == " ON" then
+							hl.fg = colors.green
+						elseif self.status == " * " then
+							hl.fg = colors.orange
+						end
+						return hl
+					end,
+				}),
+				Space,
 			}
 
 			local Diagnostics = {
@@ -406,7 +360,7 @@ return {
 					end,
 					hl = { fg = heirline.get_highlight("DiagnosticSignHint").fg },
 				},
-				-- Space(2),
+				Space(2),
 			}
 
 			local Git
@@ -430,7 +384,7 @@ return {
 							return has_changes
 						end
 					end,
-					provider = " ! ",
+					provider = string.format(" %s ", icons.common.asterisk),
 					hl = { fg = colors.blue, bold = true },
 				}
 
@@ -447,20 +401,27 @@ return {
 			do
 				local LspIndicator = {
 					hl = { fg = heirline.get_highlight("Statusline").fg },
-					provider = "LSP",
+					{
+						{ provider = icons.common.circle_small },
+						Space,
+					},
 				}
 
 				local LspServer = {
-					provider = function(self)
-						local names = self.lsp_names
-						if #names == 1 then
-							names = names[1]
-						else
-							names = table.concat(names, " ")
-							-- names = table.concat(names, " ")
-						end
-						return names
-					end,
+					{
+						{
+							provider = function(self)
+								local names = self.lsp_names
+								if #names == 1 then
+									names = names[1]
+								else
+									names = table.concat(names, "")
+								end
+								return names
+							end,
+						},
+						Space,
+					},
 					hl = { fg = heirline.get_highlight("Statusline").fg },
 				}
 
@@ -498,6 +459,7 @@ return {
 					},
 					flexible = 10,
 					LspServer,
+					-- Space(2),
 					LspIndicator,
 				}
 			end
@@ -521,7 +483,7 @@ return {
 					self.fileformat = fileformat
 					return self.fileformat or self.encoding
 				end,
-				{
+				heirline.surround({ "", "" }, nil, {
 					provider = function(self)
 						local sep = (self.fileformat and self.encoding) and " " or ""
 						return table.concat({ " ", self.fileformat or "", sep, self.encoding or "", " " })
@@ -530,7 +492,8 @@ return {
 						fg = heirline.get_highlight("Statusline").bg,
 						bg = heirline.get_highlight("Statusline").fg,
 					},
-				},
+				}),
+				Space,
 			}
 
 			local ScrollPercentage = {
@@ -543,7 +506,7 @@ return {
 			}
 
 			local Ruler = {
-				{
+				heirline.surround({ "", "" }, nil, {
 					-- :help 'statusline'
 					-- ------------------
 					-- %-2 : make item takes at least 2 cells and be left justified
@@ -552,7 +515,7 @@ return {
 					-- %c  : column number
 					-- %V  : virtual column number as -{num}.  Not displayed if equal to '%c'.
 					-- provider = '%9(%l:%L%) | %-3(%c%V%) ',
-					provider = " %3(%l%):%-3(%c%)▎%L ",
+					provider = "%3(%l%):%-3(%c%)▎%L",
 					-- provider = '%3(%l%):%-3(%c%)%L',
 					-- provider = '%3(%l%):%-3(%c%)▎%L▎%3(%P%)',
 					-- provider = '%3(%l%):%L|%-3(%c%)',
@@ -561,7 +524,8 @@ return {
 						bg = heirline.get_highlight("Statusline").fg,
 						-- bold = true,
 					},
-				},
+				}),
+				Space,
 			}
 
 			local Buffers = heirline.make_buflist({
@@ -574,15 +538,17 @@ return {
 				condition = function()
 					return utils.has_plugin("nvim-sessions") and require("nvim-sessions").current_session_name() ~= nil
 				end,
-
-				provider = function()
-					return string.format(" %s ", require("nvim-sessions").current_session_name())
-					-- return string.format(" 📌 %s ", require("nvim-sessions").current_session_name())
-				end,
-				hl = {
-					fg = heirline.get_highlight("Statusline").fg,
-					bg = colors.fg_gutter,
-				},
+				heirline.surround({ "", "" }, colors.fg_gutter, {
+					provider = function()
+						return "📌 " .. require("nvim-sessions").current_session_name()
+					end,
+					hl = {
+						fg = heirline.get_highlight("Statusline").fg,
+						-- fg = colors.blue,
+						bg = colors.fg_gutter,
+					},
+				}),
+				Space,
 			}
 
 			local TerminalName = {
@@ -613,22 +579,19 @@ return {
 				hl = heirline.get_highlight("Statusline"),
 				{
 					Mode,
+					Space,
 					SearchResults,
 					CurrentSession,
-					Space,
 					FileNameBlock,
 					Space,
-					-- Codeium,
-					-- Space(4),
+					Codeium,
+					Space(4),
 					Align,
 					Diagnostics,
-					Space,
 					Git,
 					Space,
 					Lsp,
-					Space,
 					Ruler,
-					Space,
 					FileProperties,
 				},
 			}
@@ -692,23 +655,25 @@ return {
 					condition = function()
 						return conditions.buffer_matches({ buftype = { "terminal" } })
 					end,
-					FileType,
-					Space,
-					TerminalName,
+					heirline.surround({ "", "" }, colors.red, {
+						FileType,
+						Space,
+						TerminalName,
+					}),
 				},
 				{
 					-- An inactive winbar for regular files
 					condition = function()
 						return not conditions.is_active()
 					end,
-					hl = {
-						fg = heirline.get_highlight("Statusline").fg,
-						force = true,
-					},
-					FileNameBlock,
+					heirline.surround(
+						{ "", "" },
+						colors.blue,
+						{ hl = { fg = heirline.get_highlight("Statusline").fg, force = true }, FileNameBlock }
+					),
 				},
 				-- A winbar for regular files
-				FileNameBlock,
+				heirline.surround({ "", "" }, colors.blue, { FileNameBlock }),
 			}
 
 			--------------------------------------------------------------------------------

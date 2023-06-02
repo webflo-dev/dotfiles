@@ -1,8 +1,13 @@
-require("signals.volume")
-require("signals.mic")
-require("signals.power")
-require("signals.cpu")
-require("signals.memory")
-require("signals.bluetooth")
-require("signals.network")
-require("signals.nvidia")
+require(... .. ".volume")
+require(... .. ".mic")
+require(... .. ".power")
+require(... .. ".cpu")
+require(... .. ".memory")
+require(... .. ".bluetooth")
+require(... .. ".network")
+require(... .. ".nvidia")
+
+local M = {}
+M.playerctl = require(... .. ".playerctl")()
+
+return M

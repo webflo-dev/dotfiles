@@ -1,4 +1,3 @@
-local env = require("env")
 local utils = require("utils")
 
 return {
@@ -12,6 +11,8 @@ return {
 				"prettierd",
 				-- "shellcheck",
 				"stylua",
+				-- "luacheck",
+				-- "luaformatter",
 			},
 			ui = {
 				border = "rounded",
@@ -49,31 +50,23 @@ return {
 				"cssls",
 				"cssmodules_ls",
 				"dockerls",
-				"emmet_ls",
 				"eslint",
 				"gopls",
 				"graphql",
 				"html",
 				"jsonls",
 				"lua_ls",
+				-- "lua-language-server",
 				"prismals",
 				"rust_analyzer",
 				-- "tsserver",
-				-- "vtsls",
+				"vtsls",
 				"yamlls",
 			},
 		},
 		config = function(plugin, opts)
 			local lsp_autocmd_group = vim.api.nvim_create_augroup("LspAutocmds", { clear = true })
 			local custom_attach_files = utils.get_lua_files_from_dir("essentials/lsp_attach")
-
-			-- does not work as we use mason-lspconfig that loop over installed servers.
-			-- should perform our own loop and call lspconfig.setup() for each server
-			if env.USE_VTSLS then
-				table.insert(opts.servers, "vtsls")
-			else
-				table.insert(opts.servers, "tsserver")
-			end
 
 			-- setup lsconfig
 			require("mason-lspconfig").setup({ ensure_installed = opts.servers })
@@ -136,13 +129,13 @@ return {
 			"typescript",
 			"typescriptreact",
 		},
-		enabled = env.USE_VTSLS,
 		dependencies = { "nvim-lspconfig" },
 	},
 
 	{
 		"lvimuser/lsp-inlayhints.nvim",
+		lazy = true,
 		config = true,
-		init = function() end,
+		-- init = function() end,
 	},
 }

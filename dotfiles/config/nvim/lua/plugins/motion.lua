@@ -28,6 +28,9 @@ return {
 			vim.keymap.del({ "x", "o" }, "X")
 		end,
 	},
+
+	{ "chrisgrieser/nvim-spider", lazy = true },
+
 	-- { "echasnovski/mini.jump2d", version = false },
 
 	-- {

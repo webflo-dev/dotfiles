@@ -1,7 +1,8 @@
 return {
 	{
 		"kndndrj/nvim-dbee",
-		enabled = false,
+		enabled = true,
+		lazy = true,
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 		},
@@ -9,7 +10,6 @@ return {
 			require("dbee").install()
 		end,
 		opts = {
-			lazy = true,
 			connections = {
 				{
 					name = "castor",
@@ -23,9 +23,17 @@ return {
 	{
 		"kristijanhusak/vim-dadbod-ui",
 		enabled = true,
+		lazy = true,
 		dependencies = {
 			"tpope/vim-dadbod",
 			"kristijanhusak/vim-dadbod-completion",
+		},
+		cmd = {
+			"DB",
+			"DBUI",
+			"DBUIAddConnection",
+			"DBUIClose",
+			"DBUIToggle",
 		},
 		-- init = function()
 		-- 	vim.g.db_ui_env_variable_url = "postgres://postgres:postgres@localhost:5432/castor"

@@ -86,40 +86,22 @@ zle -N self-insert url-quote-magic
 
 
 
+[[ ! -d "${XDG_DATA_HOME}/zap/" ]] && zsh <(curl -s https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh)
+[[ -f "${XDG_DATA_HOME}/zap/zap.zsh" ]] && source "${XDG_DATA_HOME}/zap/zap.zsh"
+
+
 source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/key-bindings.zsh"
 source "$ZDOTDIR/aliases.zsh"
-[ -f "$ZDOTDIR/functions.zsh" ] && source "$ZDOTDIR/functions.zsh"
-[ -f "$ZDOTDIR/plugins.zsh" ] && source "$ZDOTDIR/plugins.zsh"
+source "$ZDOTDIR/functions.zsh"
+source "$ZDOTDIR/plugins.zsh"
+
+[ -e "$ZDOTDIR/private.zsh" ] && source "$ZDOTDIR/private.zsh"
+[ -e "$ZDOTDIR/work.zsh" ] && source "$ZDOTDIR/work.zsh"
 
 eval "$(starship init zsh)"
 
-
-[[ -e $ZDOTDIR/private.zsh ]] && source $ZDOTDIR/private.zsh
-
 autoload -Uz compinit
 compinit
-
-
-# # Plugin manager invocation
-# declare -A ZNAP 
-# ZNAP[PLUGINS]="$XDG_DATA_HOME/zsh/plugins"
-# ZNAP[SELF]="$ZNAP[PLUGINS]/zsh-snap"
-# ZNAP[BIN]="$ZNAP[SELF]/znap.zsh"
-#
-# if [[ ! -s $ZNAP[BIN] ]]; then
-#   git clone --depth 1 'https://github.com/marlonrichert/zsh-snap.git' $ZNAP[SELF]
-# fi
-# source $ZNAP[BIN]
-#
-# [ ! -e "$HISTFILE" ] && mkdir $(dirname $HISTFILE)
-#
-# source "$ZDOTDIR/completion.zsh"
-# source "$ZDOTDIR/key-bindings.zsh"
-# source "$ZDOTDIR/aliases.zsh"
-# [ -f "$ZDOTDIR/functions.zsh" ] && source "$ZDOTDIR/functions.zsh"
-# [ -f "$ZDOTDIR/plugins.zsh" ] && source "$ZDOTDIR/plugins.zsh"
-
-
 
 

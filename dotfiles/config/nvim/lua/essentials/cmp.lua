@@ -65,12 +65,12 @@ return {
 				winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
 			}
 
-			require("cmp").setup({
-				window = {
-					completion = cmp.config.window.bordered(border_opts),
-					documentation = cmp.config.window.bordered(border_opts),
-				},
-			})
+			-- require("cmp").setup({
+			-- 	window = {
+			-- 		completion = cmp.config.window.bordered(border_opts),
+			-- 		documentation = cmp.config.window.bordered(border_opts),
+			-- 	},
+			-- })
 
 			local sources = {
 				{ name = "nvim_lsp" },
@@ -80,7 +80,7 @@ return {
 				{ name = "codeium" },
 				{ name = "buffer", keyword_length = 5 },
 				{ name = "path" },
-				{ name = "vim-dadbod-completion" },
+				-- { name = "vim-dadbod-completion" },
 				-- { name = "git" },
 				-- { name = 'npm',                     keyword_length = 4 },
 				-- { name = "emoji" },
