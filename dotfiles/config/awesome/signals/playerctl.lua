@@ -9,51 +9,65 @@ local capi = { awesome = awesome }
 
 local playerctl = { mt = {} }
 
-function playerctl:play_pause(player)
-	player = player or self._private.manager.players[1]
-	if player then
+local function get_player_by_name(self, name)
+	if name == nil then
+		return self._private.manager.players[1]
+	end
+
+	for _, player in ipairs(self._private.manager.players) do
+		if player.player_name == name then
+			return player
+		end
+	end
+
+	return nil
+end
+
+function playerctl:play_pause(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:play_pause()
 	end
 end
 
-function playerctl:pause(player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:pause(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:pause()
 	end
 end
 
-function playerctl:play(player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:play(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:play()
 	end
 end
 
-function playerctl:stop(player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:stop(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:stop()
 	end
 end
 
-function playerctl:previous(player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:previous(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:previous()
 	end
 end
 
-function playerctl:next(player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:next(player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:next()
 	end
 end
 
-function playerctl:set_position(position, player)
-	player = player or self._private.manager.players[1]
-	if player then
+function playerctl:set_position(position, player_name)
+	local player = get_player_by_name(self, player_name)
+	if player ~= nil then
 		player:set_position(position * 1000000)
 	end
 end

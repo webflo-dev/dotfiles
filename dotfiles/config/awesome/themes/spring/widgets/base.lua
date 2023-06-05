@@ -39,6 +39,8 @@ function M.svg_template(image, color, id)
 			widget = wibox.widget.imagebox,
 			id = id or "svg",
 		},
+		forced_height = dpi(30),
+		forced_width = dpi(30),
 		margins = dpi(5),
 		widget = wibox.container.margin,
 	}

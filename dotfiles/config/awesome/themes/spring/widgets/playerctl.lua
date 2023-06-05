@@ -160,41 +160,146 @@ awesome.connect_signal("playerctl::playback_status", function(status, player_nam
 	end
 end)
 
-local player_list = wibox.widget({
-	widget = wibox.container.margin,
-	homogeneous = true,
-	spacing = 5,
-	layout = wibox.layout.grid,
-	forced_num_cols = 3,
-	forced_num_rows = 3,
-})
-player_list:add_widget_at({
-	widget = wibox.widget.imagebox,
-	image = beautiful.svg.music,
-	forced_height = dpi(30),
-	forced_width = dpi(30),
-}, 1, 1, 3, 1)
-player_list:add_widget_at({
-	widget = wibox.widget.textbox,
-	text = "Artist",
-}, 1, 2, 1, 2)
-player_list:add_widget_at({
-	widget = wibox.widget.textbox,
-	text = "Title",
-}, 2, 2, 1, 2)
-local player_list_popup = awful.popup({
+local popup = awful.popup({
 	preferred_anchors = "middle",
-	border_color = beautiful.border_color,
-	border_width = beautiful.border_width,
-	visible = false,
 	ontop = true,
-	hide_on_right_click = true,
-	widget = {
-		widget = wibox.container.margin,
-		layout = wibox.layout.fixed.vertical,
-		player_list,
-	},
+	visible = false,
+	shape = gears.shape.rounded_rect,
+	border_width = beautiful.border_width,
+	border_color = beautiful.colors.lime,
+	-- hide_on_right_click = true,
+	offset = { y = 5 },
+	widget = {},
 })
-player_list_popup:bind_to_widget(widget_text)
+
+local function create_player(player_name, metadata)
+	local play_pause = clickable_control(base.svg(beautiful.svg.play, beautiful.colors.light), function()
+		playerctl:play_pause(player_name)
+	end)
+	local previous = clickable_control(base.svg(beautiful.svg.backward, beautiful.colors.light), function()
+		playerctl:previous(player_name)
+	end)
+	local next = clickable_control(base.svg(beautiful.svg.forward, beautiful.colors.light), function()
+		playerctl:next(player_name)
+	end)
+
+	local player_icon = nil
+	if metadata.icon_path ~= nil and metadata.icon_path ~= "" then
+		player_icon = base.svg(metadata.icon_path, beautiful.colors.light)
+	else
+		player_icon = { widget = wibox.widget.textbox, markup = helperUI.pango2(player_name, { style = "italic" }) }
+	end
+
+	local album_image = nil
+	if metadata.art_path ~= "" then
+		album_image = {
+			widget = wibox.widget.imagebox,
+			clip_shape = helperUI.rounded_shape(),
+			forced_height = dpi(85),
+			forced_width = dpi(85),
+			image = metadata.art_path,
+		}
+	else
+		album_image = base.svg(beautiful.svg.music, beautiful.accent_color)
+		album_image.forced_width = dpi(85)
+		album_image.forced_height = dpi(85)
+	end
+
+	local player = wibox.widget({
+		{
+			{
+				{
+					{
+						album_image,
+						margins = dpi(8),
+						layout = wibox.container.margin,
+					},
+					valign = "center",
+					layout = wibox.container.place,
+				},
+				{
+					{
+						{
+							player_icon,
+							{
+								markup = helperUI.pango2(metadata.artist, { weight = "bold" }),
+								font = beautiful.fonts.system,
+								widget = wibox.widget.textbox,
+							},
+							layout = wibox.layout.fixed.horizontal,
+						},
+						{
+							{
+								markup = metadata.title,
+								font = beautiful.fonts.system,
+								widget = wibox.widget.textbox,
+							},
+							widget = wibox.container.margin,
+							margins = { left = dpi(8) },
+						},
+						forced_width = dpi(300),
+						layout = wibox.layout.fixed.vertical,
+						spacing = dpi(3),
+					},
+					valign = "center",
+					layout = wibox.container.place,
+				},
+				{
+					{
+						previous,
+						play_pause,
+						next,
+						layout = wibox.layout.align.horizontal,
+					},
+					forced_width = 90,
+					valign = "center",
+					haligh = "center",
+					layout = wibox.container.place,
+				},
+				spacing = dpi(8),
+				layout = wibox.layout.align.horizontal,
+			},
+			margins = dpi(8),
+			layout = wibox.container.margin,
+		},
+		bg = beautiful.bg_normal,
+		widget = wibox.container.background,
+	})
+
+	local function toggle_play_pause(status, _player_name)
+		if player_name ~= _player_name then
+			return
+		end
+
+		if status == true then
+			play_pause:change_image(beautiful.svg.pause)
+		else
+			play_pause:change_image(beautiful.svg.play)
+		end
+	end
+
+	awesome.connect_signal("playerctl::playback_status", toggle_play_pause)
+
+	return player
+end
+
+local function rebuild_popup()
+	local rows = {
+		layout = wibox.layout.fixed.vertical,
+	}
+	for player_name, metadata in pairs(players) do
+		table.insert(rows, create_player(player_name, metadata))
+	end
+	popup:setup(rows)
+end
+
+widget_text:connect_signal("button::press", function()
+	if popup.visible then
+		popup.visible = not popup.visible
+	else
+		rebuild_popup()
+		popup:move_next_to(mouse.current_widget_geometry, "left")
+	end
+end)
 
 return widget
