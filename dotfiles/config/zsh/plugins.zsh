@@ -16,8 +16,11 @@ plug "/usr/share/fzf/key-bindings.zsh"
 plug "Aloxaf/fzf-tab"
 
 
-if [ -e "$BUN_INSTALL" ]; then
-  path+=($BUN_INSTALL/bin)
-  source "$BUN_INSTALL/_bun"
-fi
+# if [ -e "$BUN_INSTALL" ]; then
+#   path+=($BUN_INSTALL/bin)
+#   source "$BUN_INSTALL/_bun"
+# fi
 
+# source "$INTELLI_HOME/bin/intelli-shell.sh"
+eval "$(navi widget zsh)"
+eval "$(zoxide init zsh)"

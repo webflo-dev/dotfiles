@@ -14,21 +14,21 @@ export XDG_VIDEOS_DIR="$HOME/Videos"
 
 
 #--- APP HOME -----------------------------------------------------------------
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+
 export VOLTA_HOME="$XDG_DATA_HOME/volta"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
-export _Z_DATA="$XDG_DATA_HOME/z"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export GOPATH="$XDG_DATA_HOME/go"
+export INTELLI_HOME="$XDG_DATA_HOME/intelli-shell"
+
 # export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export DOCKER_CONFIG=
 export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
 export DOCKER_BUILDKIT=0
-export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
-export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
-export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
-export BUN_INSTALL="$XDG_CONFIG_HOME/bun" 
 #------------------------------------------------------------------------------
 
 
@@ -48,6 +48,7 @@ export BROWSER="microsoft-edge-stable"
 export VISUAL="nvim"
 export EDITOR="nvim"
 
+export GPG_TTY=$(tty)
 
 #--- LESS -------------------------------------------------------------------
 #  -F    Exit if the content fits on one screen

@@ -49,3 +49,5 @@ alias vim=nvim
 
 # alias keepalive-vdi="xdotool key --window $(comm -12 <(xdotool search --name 'FR09540462W' | sort) <(xdotool search --class 'Wfica' | sort)) --delay 300000 --repeat 288 space"
 
+# alias intelli-shell="$INTELLI_HOME/bin/intelli-shell"
+

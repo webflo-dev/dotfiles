@@ -121,6 +121,6 @@
 [includeIf "hasconfig:remote.*.url:git@github.com:**/**"]
   path = ~/.config/git/config-github
 
-[includeIf "hasconfig:remote.*.url:git@gitlab.com:castordoc/**"]
-  path = ~/.config/git/config-castor
+[include]
+path = ~/dev/castor/git-config
 

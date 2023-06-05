@@ -166,7 +166,6 @@ local function position_cb(self)
 		local length = (player.metadata.value["mpris:length"] or 0) / 1000000
 		if position ~= self._private.last_position or length ~= self._private.last_length then
 			capi.awesome.emit_signal("playerctl::position", position, length, player.player_name)
-			-- self:emit_signal("position", position, length, player.player_name)
 			self._private.last_position = position
 			self._private.last_length = length
 		end
@@ -178,13 +177,13 @@ local function seeked_cb(self, player, position)
 
 	if player == self._private.manager.players[1] then
 		self._private.active_player = player
-		self:emit_signal("seeked", position / 1000000, player.player_name)
+		capi.awesome.emit_signal("playerctl::seeked", position / 1000000, player.player_name)
 	end
 end
 
 local function exit_cb(self, player)
 	if player == self._private.manager.players[1] then
-		self:emit_signal("exit", player.player_name)
+		capi.awesome.emit_signal("exit", player.player_name)
 	end
 end
 

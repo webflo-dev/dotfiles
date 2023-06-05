@@ -6,14 +6,15 @@ config:
   chmod_on_import: false
 actions:
   font-cache-refresh: fc-cache -f -v
-  base: sh $HOME/.dotfiles/actions/X11/setup.sh $HOME/.dotfiles/actions/zsh.sh $HOME/.dotfiles/actions/volta.sh $HOME/.dotfiles/actions/gpg.sh
+  base: sh $HOME/.dotfiles/actions/X11/setup.sh $HOME/.dotfiles/actions/zsh.sh $HOME/.dotfiles/actions/volta.sh
+    $HOME/.dotfiles/actions/gpg.sh
   laptop: sh $HOME/.dotfiles/actions/libinput-gestures.sh
   work: sh $HOME/.dotfiles/actions/vanta.sh $HOME/.dotfiles/actions/work.sh $HOME/.dotfiles/actions/docker-compose.sh
 dotfiles:
   d_bin:
     src: local/bin
     dst: ~/.local/bin
-    chmod: "711"
+    chmod: '700'
   f_smoke-test.sh:
     src: local/share/fonts/smoke-test.sh
     dst: ~/.local/share/fonts/smoke-test.sh
@@ -23,6 +24,12 @@ dotfiles:
   d_zsh:
     src: config/zsh
     dst: ~/.config/zsh
+    cmpignore:
+    - .zcompdump*
+    upignore:
+    - .zcompdump*
+    instignore:
+    - .zcompdump*
   f_starship.toml:
     src: config/starship.toml
     dst: ~/.config/starship.toml
@@ -59,19 +66,35 @@ dotfiles:
   d_git:
     src: config/git
     dst: ~/.config/git
+    cmpignore:
+    - '!config$'
+    upignore:
+    - '!config$'
+    instignore:
+    - '!config$'
   d_nvim:
     src: config/nvim
     dst: ~/.config/nvim
+    cmpignore:
+    - scretch
+    - sessions
+    upignore:
+    - scretch
+    - sessions
+    instignore:
+    - scretch
+    - sessions
   f_docker-compose.yml:
     src: docker-compose.yml
     dst: ~/docker-compose.yml
-    chmod: "600"
+    chmod: '600'
   f_microsoft-edge-stable-flags.conf:
     src: config/microsoft-edge-stable-flags.conf
     dst: ~/.config/microsoft-edge-stable-flags.conf
   f_mimeapps.list:
     src: config/mimeapps.list
     dst: ~/.config/mimeapps.list
+    chmod: '644'
   d_applications:
     src: local/share/applications
     dst: ~/.local/share/applications
@@ -88,55 +111,64 @@ dotfiles:
     src: local/share/fonts/Luciole
     dst: ~/.local/share/fonts/Luciole
     actions:
-      - font-cache-refresh
+    - font-cache-refresh
   d_font_cartograph:
     src: local/share/fonts/Cartograph-CF
     dst: ~/.local/share/fonts/Cartograph-CF
     actions:
-      - font-cache-refresh
+    - font-cache-refresh
   d_pipewire:
     src: config/pipewire
     dst: ~/.config/pipewire
   d_systemd:
     src: config/systemd
     dst: ~/.config/systemd
+  f_podman-compose@.service:
+    src: config/systemd/user/podman-compose@.service
+    dst: ~/.config/systemd/user/podman-compose@.service
+  d_aconfmgr:
+    src: config/aconfmgr
+    dst: ~/.config/aconfmgr
+    chmod: '700'
 profiles:
   base:
     dotfiles:
-      - d_bin
-      - f_smoke-test.sh
-      - f_fonts.conf
-      - d_zsh
-      - f_starship.toml
-      - d_kitty
-      - d_font_luciole
-      - d_font_cartograph
-      - d_ranger
-      - f_pulsemixer.cfg
-      - d_btop
-      - d_neofetch
-      - d_git
-      - d_nvim
-      - d_pipewire
-      - d_systemd
+    - d_bin
+    - f_smoke-test.sh
+    - f_fonts.conf
+    - d_zsh
+    - f_starship.toml
+    - d_kitty
+    - d_font_luciole
+    - d_font_cartograph
+    - d_ranger
+    - f_pulsemixer.cfg
+    - d_btop
+    - d_neofetch
+    - d_git
+    - d_nvim
+    - d_pipewire
+    - d_systemd
+    - d_aconfmgr
   desktop:
     dotfiles:
-      - f_microsoft-edge-stable-flags.conf
-      - f_mimeapps.list
-      - d_applications
+    - f_microsoft-edge-stable-flags.conf
+    - f_mimeapps.list
+    - d_applications
   X11:
     dotfiles:
-      - d_X11
-      - d_gtk-3.0
-      - d_awesome
-      - d_picom
-      - d_rofi
+    - d_X11
+    - d_gtk-3.0
+    - d_awesome
+    - d_picom
+    - d_rofi
   work:
     dotfiles:
-      - f_docker-compose.yml
+    - f_docker-compose.yml
+    - f_podman-compose@.service
   laptop:
     dotfiles:
-      - f_libinput-gestures.conf
+    - f_libinput-gestures.conf
   # hyprland:
   #   dotfiles:
   #     - d_hypr

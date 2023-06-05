@@ -17,6 +17,7 @@ services:
       - TZ=Europe/Paris
       - DOCKER_HOST=$DOCKER_HOST
     volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock
       # - /var/run/docker.sock:/var/run/docker.sock
       - /home/florent/docker/portainer/data:/data
 
@@ -27,8 +28,9 @@ services:
     ports:
       - 9005:8080
     environment:
-      - DOCKER_HOST=$DOCKER_HOST
-    # volumes:
+      - DOCKER_HOST=$DOCKEr_HOST
+    volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock
     # - /var/run/docker.sock:/var/run/docker.sock
 
   pgadmin4:

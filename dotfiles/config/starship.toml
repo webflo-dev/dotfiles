@@ -1,31 +1,32 @@
 [directory]
-read_only = " "
-truncation_symbol=".../"
+read_only = ' 󰌾 '
+truncation_symbol='.../'
 truncation_length=5
 
 [aws]
 disabled = true
 format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
-symbol = "  "
+symbol = '  '
 
 [bun]
 format = '\[[$symbol($version)]($style)\]'
 
 [c]
 format = '\[[$symbol($version(-$name))]($style)\]'
-symbol = " "
+symbol = ' '
 
 [cmake]
 format = '\[[$symbol($version)]($style)\]'
 
 [cmd_duration]
-format = '\[[⏱ $duration]($style)\]'
+format = '\[[󱎫 $duration]($style)\]'
+style = 'yellow'
 
 [cobol]
 format = '\[[$symbol($version)]($style)\]'
 
 [conda]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol$environment]($style)\]'
 
 [crystal]
@@ -36,24 +37,25 @@ format = '\[[$symbol($version)]($style)\]'
 
 [dart]
 format = '\[[$symbol($version)]($style)\]'
-symbol = " "
+symbol = ' '
 
 [deno]
 format = '\[[$symbol($version)]($style)\]'
 
 [docker_context]
-symbol = " "
-format = '\[[$symbol$context]($style)\]'
+symbol = ' '
+# format = '\[[$symbol$context]($style)\]'
+format = '\[[$symbol]($style)\]'
 
 [dotnet]
 format = '\[[$symbol($version)(🎯 $tfm)]($style)\]'
 
 [elixir]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version \(OTP $otp_version\))]($style)\]'
 
 [elm]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [erlang]
@@ -64,33 +66,33 @@ disabled = true
 format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
 
 [git_branch]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol$branch]($style)\]'
 
 [git_status]
 format = '([\[$all_status$ahead_behind\]]($style))'
 
 [golang]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [haskell]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [helm]
 format = '\[[$symbol($version)]($style)\]'
 
 [hg_branch]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol$branch]($style)\]'
 
 [java]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [julia]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [kotlin]
@@ -100,27 +102,27 @@ format = '\[[$symbol($version)]($style)\]'
 format = '\[[$symbol$context( \($namespace\))]($style)\]'
 
 [lua]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [memory_usage]
-symbol = " "
+symbol = '󰍛 '
 format = '\[$symbol[$ram( | $swap)]($style)\]'
 
 [meson]
-symbol = "喝 "
+symbol = '󰔷 '
 format = '\[[$symbol$project]($style)\]'
 
 [nim]
-symbol = " "
+symbol = '󰆥 '
 format = '\[[$symbol($version)]($style)\]'
 
 [nix_shell]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol$state( \($name\))]($style)\]'
 
 [nodejs]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [ocaml]
@@ -130,7 +132,7 @@ format = '\[[$symbol($version)(\($switch_indicator$switch_name\))]($style)\]'
 format = '\[[$symbol$cloud(\($project\))]($style)\]'
 
 [package]
-symbol = " "
+symbol = '󰏗 '
 format = '\[[$symbol$version]($style)\]'
 
 [perl]
@@ -146,7 +148,7 @@ format = '\[[$symbol$stack]($style)\]'
 format = '\[[$symbol($version)]($style)\]'
 
 [python]
-symbol = " "
+symbol = ' '
 format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\]'
 
 [raku]
@@ -156,19 +158,19 @@ format = '\[[$symbol($version-$vm_version)]($style)\]'
 format = '\[[$symbol($version)]($style)\]'
 
 [ruby]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [rust]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [scala]
-symbol = " "
+symbol = ' '
 format = '\[[$symbol($version)]($style)\]'
 
 [spack]
-symbol = "🅢 "
+symbol = '🅢 '
 format = '\[[$symbol$environment]($style)\]'
 
 [sudo]
@@ -197,7 +199,7 @@ format = '\[[$symbol($version)]($style)\]'
 
 
 [buf]
-symbol = " "
+symbol = ' '
 
 [rlang]
-symbol = "ﳒ "
+symbol = '󰟔 '
