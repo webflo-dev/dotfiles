@@ -8,7 +8,8 @@ local helperUI = require("helpers.ui")
 local helperIcon = require("helpers.icon")
 local base = require("themes.spring.widgets.base")
 
-local playerctl = require("signals").playerctl
+--local playerctl = require("signals").playerctl
+local playerctl = require("signals.playerctl_working")()
 
 local function debug(prefix, data, key)
 	require("gears.debug").print_warning(prefix .. " => " .. require("gears.debug").dump_return(data, key, 3))

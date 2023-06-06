@@ -172,7 +172,7 @@ local function worker(user_args)
 		if new == true then
 			_new = "new"
 		end
-		-- gears.debug.print_warning("title: " ..
+		-- gears.debug.print_warning("title: " .._working
 		--   title .. " >> " .. artist .. " >> " .. album_path .. " >> " .. album .. " >> " .. _new .. " >> " .. player_name)
 
 		playerctl_widget:set_visible(true)

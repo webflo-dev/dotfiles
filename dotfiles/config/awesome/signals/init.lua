@@ -7,7 +7,7 @@ require(... .. ".bluetooth")
 require(... .. ".network")
 require(... .. ".nvidia")
 
-local M = {}
-M.playerctl = require(... .. ".playerctl")()
+-- local M = {}
+-- M.playerctl = require(... .. ".playerctl")()
 
-return M
+-- return M

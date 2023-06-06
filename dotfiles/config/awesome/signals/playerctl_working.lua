@@ -141,10 +141,10 @@ local function metadata_cb(self, player, metadata)
 		-- Callback can be called even though values we care about haven't
 		-- changed, so check to see if they have
 		if
-			player ~= self._private.last_player
-			or title ~= self._private.last_title
-			or artist ~= self._private.last_artist
-			or artUrl ~= self._private.last_artUrl
+				player ~= self._private.last_player
+				or title ~= self._private.last_title
+				or artist ~= self._private.last_artist
+				or artUrl ~= self._private.last_artUrl
 		then
 			if title == "" and artist == "" and artUrl == "" then
 				return
@@ -197,11 +197,11 @@ end
 
 local function exit_cb(self, player)
 	if player == self._private.manager.players[1] then
-		capi.awesome.emit_signal("exit", player.player_name)
+		capi.awesome.emit_signal("playerctl::exit", player.player_name)
 	end
 end
 
-local function get_current_player_info(self, player)
+local function get_player_info(self, player)
 	local title = player:get_title() or ""
 	local artist = player:get_artist() or ""
 	local artUrl = player:print_metadata_prop("mpris:artUrl") or ""
@@ -235,7 +235,7 @@ local function init_player(self, name)
 		self._private.position_timer:again()
 	end
 
-	get_current_player_info(self, new_player)
+	get_player_info(self, new_player)
 end
 
 local function start_manager(self)
@@ -273,7 +273,7 @@ local function start_manager(self)
 			capi.awesome.emit_signal("playerctl::no_players")
 		elseif player == _self._private.active_player then
 			_self._private.active_player = self.players[1]
-			get_current_player_info(_self, self.players[1])
+			get_player_info(_self, self.players[1])
 		end
 	end
 end
