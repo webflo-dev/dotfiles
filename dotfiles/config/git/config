@@ -76,6 +76,8 @@
   s = status -s
   l= !git log --pretty=format:\"%C(green)%ad %C(yellow)%h%C(auto)%d %C(reset)%s  %C(cyan)<%C(blue)%cn%C(cyan)>%Creset\" --date=short
 
+  stash-save = "!f() { git stash save -u $1; }; f"
+
   amend = commit --amend --reuse-message=HEAD
   unstage = "restore --staged"
 
