@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch /dev/v4l/by-id/usb-046d_Logitech_StreamCam_ECE8ED85-video-index0 and restore controls
+
+[Path]
+PathExists=/dev/v4l/by-id/usb-046d_Logitech_StreamCam_ECE8ED85-video-index0
+
+[Install]
+WantedBy=paths.target

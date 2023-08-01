@@ -1,0 +1,9 @@
+[Unit]
+Description=Restore usb-046d_Logitech_StreamCam_ECE8ED85-video-index0 controls
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/python3.11/site-packages/CameraCtrls/cameractrls.py -d /dev/v4l/by-id/usb-046d_Logitech_StreamCam_ECE8ED85-video-index0 -c gain=3,auto_exposure=manual_mode,exposure_time_absolute=606,pixelformat=MJPG,resolution=1920x1080,fps=30,logitech_led1_mode=auto,logitech_led1_frequency=0
+
+[Install]
+WantedBy=graphical-session.target

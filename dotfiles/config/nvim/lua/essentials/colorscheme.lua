@@ -63,4 +63,27 @@ return {
 			-- vim.cmd("colorscheme github_dark")
 		end,
 	},
+	{
+		"ramojus/mellifluous.nvim",
+		opts = {
+			dim_inactive = false,
+			color_set = "mellifluous",
+			-- color_set = "tender",
+			-- color_set = "mountain",
+			transparent_background = {
+				enabled = true,
+				floating_windows = true,
+				telescope = true,
+				file_tree = true,
+				cursor_line = false,
+				status_line = false,
+			},
+			flat_background = {
+				line_numbers = false,
+				floating_windows = false,
+				file_tree = false,
+				cursor_line_number = false,
+			},
+		},
+	},
 }

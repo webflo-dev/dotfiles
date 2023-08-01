@@ -34,7 +34,7 @@ function M.attach(client, buffer, autocmd_group)
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	end, "Print workspace folders")
 
-	if client.name == "tsserver" or client.name == "vtsls" then
+	if client.name == "vtsls" then
 		-- map("n", "<LocalLeader>coi", "VtsExec organize_imports", "Organize Imports")
 		map("n", "<LocalLeader>crf", "VtsExec rename_file", "Rename File")
 		-- map("n", "<LocalLeader>cmi", "VtsExec add_missing_imports", "Add Missing Imports")

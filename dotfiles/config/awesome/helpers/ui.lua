@@ -1,7 +1,12 @@
 local gears = require("gears")
 local beautiful = require("beautiful")
+local dpi = beautiful.xresources.apply_dpi
 
 local helpers = {}
+
+function helpers.debug(prefix, data, key)
+	require("gears.debug").print_warning(prefix .. " => " .. require("gears.debug").dump_return(data, key, 3))
+end
 
 function helpers.font(size, font_name, style)
 	return string.format("%s %s %s", font_name or beautiful.fonts.main, style or "", size or beautiful.font_size)
@@ -27,6 +32,12 @@ function helpers.pango2(text, values)
 	end
 
 	return "<span " .. markup .. ">" .. text .. "</span>"
+end
+
+function helpers.force_size(widget, size)
+	widget.forced_height = dpi(size or 30)
+	widget.forced_width = dpi(size or 30)
+	return widget
 end
 
 function helpers.rounded_shape(radius)

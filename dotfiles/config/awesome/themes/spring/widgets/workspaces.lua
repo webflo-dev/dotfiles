@@ -24,9 +24,18 @@ local workspaces = function(s)
 	return awful.widget.taglist({
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
-		buttons = awful.button({}, 1, function(t)
-			t:view_only()
-		end),
+		buttons = gears.table.join(
+			awful.button({}, 1, function(t)
+				t:view_only()
+			end),
+			awful.button({ "Shift" }, 1, function(t)
+				if t.selected then
+					t.select = false
+				else
+					t.selected = true
+				end
+			end)
+		),
 		layout = {
 			spacing = dpi(4),
 			layout = wibox.layout.fixed.horizontal,

@@ -60,7 +60,7 @@ return {
 	},
 
 	{
-		"TimUntersberger/neogit",
+		"NeogitOrg/neogit",
 		requires = "nvim-lua/plenary.nvim",
 		cmd = {
 			"Neogit",

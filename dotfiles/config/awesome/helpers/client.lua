@@ -84,12 +84,6 @@ function _client.move_client(c, direction)
 	end
 end
 
-function _client.centered_client_placement(c)
-	return gears.timer.delayed_call(function()
-		awful.placement.centered(c, { honor_padding = true, honor_workarea = true })
-	end)
-end
-
 -- Resize gaps on the fly
 _client.resize_gaps = function(amt)
 	local t = awful.screen.focused().selected_tag

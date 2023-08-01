@@ -16,7 +16,7 @@ local memory_text = wibox.widget({
 	font = helperUI.font(nil, beautiful.fonts.monospace),
 })
 
-awesome.connect_signal("memory::update", function(used, used_ram_percentage, total, available)
+awesome.connect_signal("signal::memory::update", function(used, used_ram_percentage, total, available)
 	local value = math.floor(used_ram_percentage)
 	local pango = {}
 

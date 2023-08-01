@@ -1,0 +1,10 @@
+[Unit]
+Description=Run castor frontend and backend
+
+[Service]
+Type=simple
+ExecStart=/home/florent/dev/castor/scripts/castor start
+ExecStop=/home/florent/dev/castor/scripts/castor quit
+
+[Install]
+WantedBy=default.target

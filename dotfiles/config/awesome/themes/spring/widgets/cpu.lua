@@ -16,7 +16,7 @@ local cpu_text = wibox.widget({
 	font = helperUI.font(nil, beautiful.fonts.monospace),
 })
 
-awesome.connect_signal("cpu::update", function(value)
+awesome.connect_signal("signal::cpu::update", function(value)
 	local pango = {}
 
 	if value >= 70 and value < 90 then

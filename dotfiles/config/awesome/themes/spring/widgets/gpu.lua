@@ -16,7 +16,7 @@ local gpu_text = wibox.widget({
 	font = helperUI.font(nil, beautiful.fonts.monospace),
 })
 
-awesome.connect_signal("nvidia::update", function(value_str)
+awesome.connect_signal("signal::nvidia::update", function(value_str)
 	local value = tonumber(value_str)
 	local pango = {}
 

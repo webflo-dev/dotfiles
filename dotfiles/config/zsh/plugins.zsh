@@ -24,3 +24,7 @@ plug "Aloxaf/fzf-tab"
 # source "$INTELLI_HOME/bin/intelli-shell.sh"
 eval "$(navi widget zsh)"
 eval "$(zoxide init zsh)"
+
+plug "anyakichi/fzf-utils"
+
+eval "$(fnm env --use-on-cd)"

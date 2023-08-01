@@ -24,19 +24,22 @@ local gears = require("gears")
 --   end
 -- )
 
-awful.widget.watch([[ 
+awful.widget.watch(
+	[[ 
  sh -c "nmcli -get-values DEVICE,TYPE,STATE device status | grep -E \":(wifi|ethernet):(dis)?(connected|connecting)\" "
-]], 5,
-  function(_, stdout)
-    local devices = gears.string.split(stdout:sub(1, -2), "\n")
-    local values = {}
-    for i, device in ipairs(devices) do
-      local name, type, state = table.unpack(gears.string.split(device, ':'))
-      values[i] = {
-        name = name,
-        type = type,
-        state = gears.string.split(state, " ")[1]
-      }
-    end
-    awesome.emit_signal("network::update", values)
-  end)
+]],
+	5,
+	function(_, stdout)
+		local devices = gears.string.split(stdout:sub(1, -2), "\n")
+		local values = {}
+		for i, device in ipairs(devices) do
+			local name, type, state = table.unpack(gears.string.split(device, ":"))
+			values[i] = {
+				name = name,
+				type = type,
+				state = gears.string.split(state, " ")[1],
+			}
+		end
+		awesome.emit_signal("signal::network::update", values)
+	end
+)

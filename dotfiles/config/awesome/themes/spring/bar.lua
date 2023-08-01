@@ -11,17 +11,17 @@ local time = require("themes.spring.widgets.time")
 local system = require("themes.spring.widgets.system")
 local audio = require("themes.spring.widgets.audio")
 local network = require("themes.spring.widgets.network")
-local playerctl_working = require("themes.spring.widgets.playerctl.playerctl-working")
-local playerctl_wip = require("themes.spring.widgets.playerctl.playerctl-wip")
-
+local playerctl = require("themes.spring.widgets.playerctl")
+local screenrecord = require("themes.spring.widgets.screenrecord")
+local screenshot = require("themes.spring.widgets.screenshot")
+local overmind = require("themes.spring.widgets.overmind")
 
 local function left(s)
 	return wibox.widget({
 		workspaces(s),
 		-- layout_box(s),
 		layout(s),
-		playerctl_working,
-		playerctl_wip,
+		playerctl,
 		layout = wibox.layout.fixed.horizontal,
 		spacing = dpi(10),
 	})
@@ -31,6 +31,8 @@ local function middle(s)
 	return wibox.widget({
 		time,
 		date,
+		screenrecord,
+		screenshot,
 		layout = wibox.layout.fixed.horizontal,
 		spacing = dpi(20),
 	})
@@ -39,6 +41,7 @@ end
 local function right(s)
 	return wibox.widget({
 		{
+			overmind,
 			wibox.widget.systray(),
 			system,
 			-- network,

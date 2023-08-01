@@ -1,10 +1,6 @@
 local Gio = require("lgi").Gio
 local awful = require("awful")
 local gears = require("gears")
--- local gobject = require("gears.object")
--- local gtable = require("gears.table")
--- local gtimer = require("gears.timer")
--- local gfilesystem = require("gears.filesystem")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local capi = { screen = screen, mouse = mouse }
@@ -16,10 +12,6 @@ local helperIcon = require("helpers.icon")
 local base = require("themes.spring.widgets.base")
 
 local app_launcher = { mt = {} }
-
-local function debug(value, key)
-	require("gears.debug").print_warning("=>> " .. require("gears.debug").dump_return(value, key, 3))
-end
 
 local function string_levenshtein(str1, str2)
 	local len1 = string.len(str1)
@@ -70,7 +62,6 @@ local function generate_apps_list(self)
 	local apps = app_info.get_all()
 
 	for _, app in ipairs(apps) do
-		-- debug(app, "app")
 		if app.should_show(app) then
 			local name = app_info.get_name(app)
 			local commandline = app_info.get_commandline(app)
@@ -86,12 +77,14 @@ local function generate_apps_list(self)
 			local generic_name = Gio.DesktopAppInfo.get_string(desktop_app_info, "GenericName") or nil
 
 			table.insert(self._private.all_entries, {
+				app = app,
 				name = name,
 				generic_name = generic_name,
 				commandline = commandline,
 				executable = executable,
 				terminal = terminal,
 				icon = icon,
+				filename = Gio.DesktopAppInfo.get_filename(app):match("[^/]+$"),
 			})
 		end
 	end
@@ -155,11 +148,32 @@ local function create_app_widget(self, entry)
 	})
 
 	function app.spawn()
-		if entry.commandline ~= nil then
-			awful.spawn(entry.commandline)
-		elseif entry.executable ~= nil then
-			awful.spawn(entry.executable)
+		-- if entry.commandline ~= nil then
+		-- 	awful.spawn(entry.commandline)
+		-- elseif entry.executable ~= nil then
+		-- 	awful.spawn(entry.executable)
+		-- end
+
+		if entry.terminal == true then
+			if self.terminal ~= nil then
+				require("naughty").notification({
+					text = "Terminal applications are not yet supported",
+					title = "App launcher",
+					timeout = 3,
+				})
+				-- local terminal_command = terminal_commands_lookup[self.terminal] or self.terminal
+				-- awful.spawn(terminal_command .. " " .. entry.executable)
+			else
+				awful.spawn.easy_async("gtk4-launch " .. entry.filename, function(stdout, stderr)
+					if stderr then
+						awful.spawn(entry.executable)
+					end
+				end)
+			end
+		else
+			awful.spawn("gtk-launch " .. entry.filename)
 		end
+
 		self:hide()
 	end
 
@@ -206,12 +220,14 @@ local function search(self, text)
 				or self.search_commands and string.find(entry.commandline, text:lower(), 1, true) ~= nil
 			then
 				table.insert(self._private.matched_entries, {
+					app = entry.app,
 					name = entry.name,
 					generic_name = entry.generic_name,
 					commandline = entry.commandline,
 					executable = entry.executable,
 					terminal = entry.terminal,
 					icon = entry.icon,
+					filename = entry.filename,
 				})
 			end
 		end
@@ -236,6 +252,9 @@ end
 --- Shows the app launcher
 function app_launcher:show()
 	local screen = awful.screen.focused()
+
+	generate_apps_list(self)
+	reset(self)
 
 	screen.app_launcher = self._private.widget
 	screen.app_launcher.screen = screen

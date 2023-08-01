@@ -42,6 +42,11 @@ theme.colors = {
 
 local svg_dir = theme.theme_dir .. "svg/"
 theme.svg = {
+	check = svg_dir .. "check.svg",
+	xmark = svg_dir .. "xmark.svg",
+	question = svg_dir .. "question.svg",
+	spinner = svg_dir .. "spinner-duotone.svg",
+	file = svg_dir .. "file-lines.svg",
 	clock = svg_dir .. "clock.svg",
 	gpu = svg_dir .. "gpu.svg",
 	calendar = svg_dir .. "calendar.svg",
@@ -67,6 +72,9 @@ theme.svg = {
 	backward = svg_dir .. "backward.svg",
 	play = svg_dir .. "play.svg",
 	pause = svg_dir .. "pause.svg",
+	video = svg_dir .. "video.svg",
+	camera = svg_dir .. "camera.svg",
+	rocket = svg_dir .. "rocket.svg",
 }
 
 theme.accent_color = theme.colors.yellow

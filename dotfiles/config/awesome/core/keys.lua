@@ -1,15 +1,16 @@
 local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local beautiful = require("beautiful")
+local naughty = require("naughty")
 local dpi = beautiful.xresources.apply_dpi
 local bling = require("modules.bling")
 -- local machi = require("modules.layout-machi")
 local helperClient = require("helpers.client")
 local user_variables = require("user_variables")
 
-local playerctl = bling.signal.playerctl.lib({
-	update_on_activity = true,
-})
+local playerctl = require("signals").playerctl
+local screenrecord_signals = require("signals").screenrecord_signals
+local screenshot_signals = require("signals").screenshot_signals
 
 --- Make key easier to call
 --- ~~~~~~~~~~~~~~~~~~~~~~~
@@ -21,6 +22,16 @@ local shift = "Shift"
 --- Global key bindings
 --- ~~~~~~~~~~~~~~~~~~~
 awful.keyboard.append_global_keybindings({
+
+	-- awful.key({
+	-- 	modifiers = { mod },
+	-- 	key = "z",
+	-- 	description = "screenrecord",
+	-- 	group = "awesome",
+	-- 	on_press = function()
+	-- 		awesome.emit_signal(screenrecord_signals.toggle)
+	-- 	end,
+	-- }),
 
 	--- App
 	--- ~~~
@@ -34,8 +45,7 @@ awful.keyboard.append_global_keybindings({
 
 	-- --- App launcher
 	awful.key({ mod }, "d", function()
-		awesome.emit_signal("popup::app-launcher:show")
-		-- awful.spawn.with_shell(user_variables.cmd.menu_launcher)
+		awesome.emit_signal("signal::app-launcher")
 	end, { description = "open app launcher", group = "app" }),
 	awful.key({ mod, ctrl }, "d", function()
 		awful.spawn.with_shell(user_variables.cmd.menu_launcher)
@@ -168,20 +178,22 @@ awful.keyboard.append_global_keybindings({
 
 	--- Music
 	awful.key({}, "XF86AudioPlay", function()
-		playerctl:play_pause()
+		playerctl.play_pause()
 	end, { description = "play pause music", group = "hotkeys" }),
 	awful.key({}, "XF86AudioPrev", function()
-		playerctl:previous()
+		playerctl.previous()
 	end, { description = "previous music", group = "hotkeys" }),
 	awful.key({}, "XF86AudioNext", function()
-		playerctl:next()
+		playerctl.next()
 	end, { description = "next music", group = "hotkeys" }),
 
 	--- Screenshots
 	awful.key({}, "Print", function()
-		awful.spawn.spawn(user_variables.cmd.menu_screenshot, function() end)
-	end, { description = "open screenshot menu", group = "hotkeys" }),
-
+		awesome.emit_signal(screenshot_signals.toggle)
+	end, { description = "screenshot", group = "hotkeys" }),
+	awful.key({ shift }, "Print", function()
+		awesome.emit_signal(screenrecord_signals.toggle)
+	end, { description = "screenrecord", group = "hotkeys" }),
 	--- Lockscreen
 	awful.key({ mod, alt }, "l", function()
 		-- lock_screen_show()

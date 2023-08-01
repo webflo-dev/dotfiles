@@ -124,5 +124,5 @@
   path = ~/.config/git/config-github
 
 [include]
-path = ~/dev/castor/git-config
+path = ~/dev/castor/git-config-includeif
 

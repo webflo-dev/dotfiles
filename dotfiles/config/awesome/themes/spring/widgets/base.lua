@@ -7,6 +7,52 @@ local helperUI = require("helpers.ui")
 
 local M = {}
 
+function M.mouse_hover(widget, hover_color, leave_color)
+	widget:connect_signal("mouse::enter", function()
+		local w = mouse.current_wibox
+		if w then
+			w.cursor = "hand2"
+		end
+
+		widget.stylesheet = "svg { fill: " .. (hover_color or beautiful.accent_color) .. " }"
+	end)
+
+	widget:connect_signal("mouse::leave", function()
+		local w = mouse.current_wibox
+		if w then
+			w.cursor = "left_ptr"
+		end
+		widget.stylesheet = "svg { fill: " .. (leave_color or beautiful.fg_normal) .. " }"
+	end)
+
+	return widget
+end
+
+function M.clickable_widget(widget, hover_color, leave_color, on_click)
+	widget:connect_signal("mouse::enter", function()
+		local w = mouse.current_wibox
+		if w then
+			w.cursor = "hand2"
+		end
+
+		widget.stylesheet = "svg { fill: " .. (hover_color or beautiful.accent_color) .. " }"
+	end)
+
+	widget:connect_signal("mouse::leave", function()
+		local w = mouse.current_wibox
+		if w then
+			w.cursor = "left_ptr"
+		end
+		widget.stylesheet = "svg { fill: " .. (leave_color or beautiful.accent_color) .. " }"
+	end)
+
+	if on_click ~= nil then
+		widget:connect_signal("button::press", on_click)
+	end
+
+	return widget
+end
+
 function M.box(child)
 	local widget = wibox.widget({
 		{
@@ -32,8 +78,6 @@ function M.svg_template(image, color, id)
 		{
 			image = image,
 			stylesheet = "svg { fill: " .. color .. " }",
-			upscale = true,
-			downscale = true,
 			valign = "center",
 			halign = "center",
 			widget = wibox.widget.imagebox,
@@ -53,11 +97,11 @@ function M.svg(image, color, id)
 	end
 
 	function widget:change_fill(new_color)
-		self:get_children_by_id("svg")[1]:set_stylesheet("svg { fill: " .. new_color .. " }")
+		self:get_children_by_id(id or "svg")[1]:set_stylesheet("svg { fill: " .. new_color .. " }")
 	end
 
 	function widget:change_image(new_image)
-		self:get_children_by_id("svg")[1]:set_image(new_image)
+		self:get_children_by_id(id or "svg")[1]:set_image(new_image)
 	end
 
 	return widget
