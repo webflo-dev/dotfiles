@@ -1,12 +1,6 @@
 local awful = require("awful")
 local ruled = require("ruled")
 local gears = require("gears")
-local helperClient = require("helpers.client")
-local helperUI = require("helpers.ui")
-
---- Get screen geometry
-local screen_width = awful.screen.focused().geometry.width
-local screen_height = awful.screen.focused().geometry.height
 
 local function floating_properties(extra_properties)
 	local properties = {
@@ -15,7 +9,13 @@ local function floating_properties(extra_properties)
 		focus = true,
 		honor_workarea = true,
 		honor_padding = true,
-		placement = awful.placement.centered,
+		placement = function(c)
+			local f = awful.placement.no_offscreen + awful.placement.centered + awful.placement.no_overlap
+			f(c, {
+				honor_padding = true,
+				honor_workarea = true,
+			})
+		end,
 	}
 
 	if extra_properties == nil then
@@ -74,8 +74,9 @@ ruled.client.connect_signal("request::rules", function()
 
 	ruled.client.append_rule({
 		id = "float__type",
-		rule = {
-			type = "dialog",
+		rule_any = {
+			type = { "dialog" },
+			role = { "pop-up" },
 		},
 		properties = floating_properties(),
 	})

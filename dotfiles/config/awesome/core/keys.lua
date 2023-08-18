@@ -1,16 +1,15 @@
 local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local beautiful = require("beautiful")
-local naughty = require("naughty")
 local dpi = beautiful.xresources.apply_dpi
-local bling = require("modules.bling")
--- local machi = require("modules.layout-machi")
 local helperClient = require("helpers.client")
-local user_variables = require("user_variables")
 
-local playerctl = require("signals").playerctl
-local screenrecord_signals = require("signals").screenrecord_signals
-local screenshot_signals = require("signals").screenshot_signals
+local daemon_brightness = require("daemons.brightness")
+local daemon_audio = require("daemons.audio")
+local daemon_playerctl = require("daemons.playerctl")
+local daemon_screenrecord = require("daemons.screenrecord")
+local daemon_screenshot = require("daemons.screenshot")
+local app_launcher = require("ui.popups.app-launcher")
 
 --- Make key easier to call
 --- ~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,38 +36,16 @@ awful.keyboard.append_global_keybindings({
 	--- ~~~
 	-- Terminal
 	awful.key({ mod }, "Return", function()
-		awful.spawn(user_variables.cmd.terminal)
+		awful.spawn("terminal")
 	end, { description = "open terminal", group = "app" }),
 	awful.key({ mod, shift }, "Return", function()
-		awful.spawn(user_variables.cmd.terminal_float)
+		awful.spawn("terminal --float")
 	end, { description = "open floating terminal", group = "app" }),
 
 	-- --- App launcher
 	awful.key({ mod }, "d", function()
-		awesome.emit_signal("signal::app-launcher")
+		app_launcher:toggle()
 	end, { description = "open app launcher", group = "app" }),
-	awful.key({ mod, ctrl }, "d", function()
-		awful.spawn.with_shell(user_variables.cmd.menu_launcher)
-	end, { description = "open app launcher", group = "app" }),
-	-- --- Code editor
-	-- awful.key({ mod, shift }, "e", function()
-	-- 	awful.spawn(user_variables.code_editor)
-	-- end, { description = "open code editor", group = "app" }),
-
-	-- --- File manager
-	-- awful.key({ mod, shift }, "f", function()
-	-- 	awful.spawn(user_variables.file_manager)
-	-- end, { description = "open file manager", group = "app" }),
-
-	-- --- Web browser
-	-- awful.key({ mod, shift }, "w", function()
-	-- 	awful.spawn(user_variables.web_browser)
-	-- end, { description = "open web browser", group = "app" }),
-
-	-- --- Music player
-	-- awful.key({ mod, shift }, "s", function()
-	-- 	awful.spawn.spawn(user_variables.music_player)
-	-- end, { description = "open music client", group = "app" }),
 
 	--- WM
 	--- ~~
@@ -159,40 +136,40 @@ awful.keyboard.append_global_keybindings({
 
 	--- Brightness Control
 	awful.key({}, "XF86MonBrightnessUp", function()
-		awful.spawn(user_variables.cmd.brightness_up, false)
+		daemon_brightness:up()
 	end, { description = "increase brightness", group = "hotkeys" }),
 	awful.key({}, "XF86MonBrightnessDown", function()
-		awful.spawn(user_variables.cmd.brightness_down, false)
+		daemon_brightness:down()
 	end, { description = "decrease brightness", group = "hotkeys" }),
 
 	--- Volume control
 	awful.key({}, "XF86AudioRaiseVolume", function()
-		awful.spawn(user_variables.cmd.volume_up, false)
+		daemon_audio:sink_volume_up()
 	end, { description = "increase volume", group = "hotkeys" }),
 	awful.key({}, "XF86AudioLowerVolume", function()
-		awful.spawn(user_variables.cmd.volume_down, false)
+		daemon_audio:sink_volume_down()
 	end, { description = "decrease volume", group = "hotkeys" }),
 	awful.key({}, "XF86AudioMute", function()
-		awful.spawn(user_variables.cmd.volume_mute, false)
+		daemon_audio:sink_toggle_mute()
 	end, { description = "mute volume", group = "hotkeys" }),
 
 	--- Music
 	awful.key({}, "XF86AudioPlay", function()
-		playerctl.play_pause()
+		daemon_playerctl:play_pause()
 	end, { description = "play pause music", group = "hotkeys" }),
 	awful.key({}, "XF86AudioPrev", function()
-		playerctl.previous()
+		daemon_playerctl:previous()
 	end, { description = "previous music", group = "hotkeys" }),
 	awful.key({}, "XF86AudioNext", function()
-		playerctl.next()
+		daemon_playerctl:next()
 	end, { description = "next music", group = "hotkeys" }),
 
 	--- Screenshots
 	awful.key({}, "Print", function()
-		awesome.emit_signal(screenshot_signals.toggle)
+		daemon_screenshot:take_screenshot()
 	end, { description = "screenshot", group = "hotkeys" }),
 	awful.key({ shift }, "Print", function()
-		awesome.emit_signal(screenrecord_signals.toggle)
+		daemon_screenrecord:toggle_recording()
 	end, { description = "screenrecord", group = "hotkeys" }),
 	--- Lockscreen
 	awful.key({ mod, alt }, "l", function()
@@ -312,14 +289,9 @@ client.connect_signal("request::default_keybindings", function()
 		end, { description = "kill client", group = "client" }),
 
 		--- Center window
-		awful.key({ mod }, "c", function()
+		awful.key({ mod }, "c", function(c)
 			awful.placement.centered(c, { honor_workarea = true, honor_padding = true })
 		end, { description = "centered", group = "client" }),
-
-		--- Window switcher
-		awful.key({ alt }, "Tab", function()
-			awful.spawn.spawn(user_variables.cmd.menu_window)
-		end, { description = "switch windows", group = "client" }),
 
 		-- awful.key({ mod, }, "Tab", function()
 		-- 	awful.client.focus.history.previous()

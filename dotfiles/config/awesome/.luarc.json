@@ -1,0 +1,19 @@
+{
+  "diagnostics": {
+    "globals": [
+      "awesome",
+      "client",
+      "mouse",
+      "mousegrabber",
+      "root",
+      "screen",
+      "tag"
+    ]
+  },
+  "workspace": {
+    "library": ["/usr/share/awesome/lib"]
+  },
+  "doc": {
+    "privateName": ["_*"]
+  }
+}
