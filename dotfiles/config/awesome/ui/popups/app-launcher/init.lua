@@ -170,7 +170,7 @@ local function create_app_widget(self, entry)
 				end)
 			end
 		else
-			awful.spawn("gtk-launch " .. entry.filename)
+			awful.spawn("gtk-launch '" .. entry.filename .. "'")
 		end
 
 		self:hide()
