@@ -5,12 +5,12 @@ local gtable = require("gears.table")
 local M = {}
 
 function M.automatic_watch(command, object)
-	awful.spawn.with_line_callback(command, {
+	return awful.spawn.with_line_callback(command, {
 		stdout = function(line)
 			local info = {}
 
 			local category, data = line:match("([%w:]+) (.+)")
-			for k, v in string.gmatch(data, "([%w_]+)=([%w_]+)") do
+			for k, v in string.gmatch(data, "([%w_.:]+)=([%w_.:]+)") do
 				info[k] = v
 			end
 

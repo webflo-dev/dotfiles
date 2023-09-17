@@ -141,6 +141,11 @@ return {
 				vim.api.nvim_buf_set_option(buffer, "omnifunc", "v:lua.vim.lsp.omnifunc")
 			end,
 			settings = {
+				expose_as_code_action = {
+					"fix_all",
+					"add_missing_imports",
+					"remove_unused",
+				},
 				tsserver_file_preferences = {
 					includeInlayParameterNameHints = "literals",
 					-- includeInlayParameterNameHints = 'all',

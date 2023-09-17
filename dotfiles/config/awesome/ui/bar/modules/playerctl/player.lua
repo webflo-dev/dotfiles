@@ -1,4 +1,6 @@
 local wibox = require("wibox")
+local gtable = require("gears.table")
+local gshape = require("gears.shape")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
@@ -7,195 +9,215 @@ local daemon = require("daemons.playerctl")
 local ui = require("ui.utils")
 local tpl = require("ui.templates")
 local utils = require("utils.widget")
+local widgets_slider = require("ui.widgets.slider")
 
-local SVG_DEFAULT_SIZE = dpi(30)
-local SVG_LARGE_SIZE = dpi(85)
+local control_button = require("ui.bar.modules.playerctl.control-button")
+
+local IMAGE_DEFAULT_SIZE = dpi(24)
+local IMAGE_LARGE_SIZE = dpi(85)
+local IMAGE_SMALL_SIZE = dpi(12)
+
+local _box = function(widget, color)
+	return {
+		widget,
+		widget = wibox.container.background,
+		border_width = dpi(1),
+		border_color = color or beautiful.colors.red,
+	}
+end
+
+local api = {}
+function api:update_metadata(metadata)
+	local w_image = self:get_children_by_id("w_image")[1]
+
+	if self:get_children_by_id("w_player")[1] ~= nil then
+		self:get_children_by_id("w_player_icon")[1].image = metadata.icon_path
+		self:get_children_by_id("w_player_name")[1].markup =
+			ui.pango(metadata.player_name, { font = beautiful.fonts.system })
+	end
+
+	local image = beautiful.svg.music
+	if metadata.art_url ~= nil and metadata.art_url ~= "" then
+		image = metadata.art_url
+	elseif metadata.icon_path ~= nil and metadata.icon_path ~= "" then
+		image = metadata.icon_path
+	end
+
+	w_image.image = image
+
+	self:get_children_by_id("w_title")[1].markup = metadata.title
+	self:get_children_by_id("w_artist")[1].markup = (metadata.artist and ui.pango(metadata.artist, { weight = "bold" }))
+		or ""
+
+	self:get_children_by_id("w_slider")[1].maximum = metadata.length
+	-- self:get_children_by_id("btn_play_pause")[1]:toggle_play_pause(metadata.status)
+	-- self:update_playback_status(metadata.status)
+end
+
+function api:update_playback_status(playback_status, metadata)
+	self:get_children_by_id("btn_play_pause")[1]:toggle_play_pause(playback_status)
+end
+
+function api:update_position(position)
+	self:get_children_by_id("w_time_elapsed")[1].markup = position.elapsed
+	self:get_children_by_id("w_time_remaining")[1].markup = position.remaining
+
+	local w_slider = self:get_children_by_id("w_slider")[1]
+	if w_slider:is_busy() == false then
+		w_slider.value = tonumber(position.elapsed_raw)
+	end
+end
 
 local function new(metadata)
-	local player_icon = nil
-	if metadata.icon_path ~= nil and metadata.icon_path ~= "" then
-		player_icon = tpl.svg({
-			image = metadata.icon_path,
-			color = beautiful.colors.light,
-			forced_width = SVG_DEFAULT_SIZE,
-			forced_height = SVG_DEFAULT_SIZE,
-		})
-	else
-		player_icon = {
-			widget = wibox.widget.textbox,
-			markup = ui.pango(metadata.player_name, { style = "italic" }),
-		}
-	end
-
-	local player_image = {
-		widget = wibox.widget.imagebox,
-		clip_shape = ui.rounded_rect,
-		valign = "center",
-		halign = "center",
-		forced_width = SVG_LARGE_SIZE,
-		forced_height = SVG_LARGE_SIZE,
-		id = "w_player_image",
+	local w_image = {
+		tpl.svg({
+			clip_shape = ui.rounded_rect,
+			id = "w_image",
+			resize = true,
+		}),
+		height = IMAGE_LARGE_SIZE,
+		width = IMAGE_LARGE_SIZE,
+		strategy = "exact",
+		widget = wibox.container.constraint,
 	}
 
-	if metadata.art_path ~= nil and metadata.art_path ~= "" then
-		player_image.image = metadata.art_path
-	else
-		player_image.image = beautiful.svg.music
-	end
+	local w_player = {
+		tpl.svg({
+			id = "w_player_icon",
+			resize = true,
+			forced_width = IMAGE_SMALL_SIZE,
+			forced_height = IMAGE_SMALL_SIZE,
+		}),
+		tpl.text({
+			id = "w_player_name",
+			font = beautiful.fonts.system,
+		}),
+		layout = wibox.layout.fixed.horizontal,
+	}
 
-	local control_play_pause = tpl.svg({
-		image = beautiful.svg.play,
-		color = beautiful.colors.light,
-		id = "w_player_play_pause",
-		forced_width = SVG_DEFAULT_SIZE,
-		forced_height = SVG_DEFAULT_SIZE,
+	local w_artist = tpl.text({
+		id = "w_artist",
+		font = beautiful.fonts.system,
+		halign = "left",
+		ellipsize = "end",
 	})
 
-	local control_previous = tpl.svg({
-		image = beautiful.svg.backward,
-		color = beautiful.colors.light,
-		id = "w_player_previous",
-		forced_width = SVG_DEFAULT_SIZE,
-		forced_height = SVG_DEFAULT_SIZE,
+	local w_title = tpl.text({
+		id = "w_title",
+		font = beautiful.fonts.system,
+		halign = "left",
+		ellipsize = "end",
 	})
 
-	local control_next = tpl.svg({
-		image = beautiful.svg.forward,
-		color = beautiful.colors.light,
-		id = "w_player_next",
-		forced_width = SVG_DEFAULT_SIZE,
-		forced_height = SVG_DEFAULT_SIZE,
-	})
+	local w_slider = {
+		id = "w_slider",
+		minimum = 0,
+		shape = ui.rounded_rect,
+		forced_height = dpi(12),
+		bar_color = beautiful.colors.green,
+		bar_active_color = beautiful.colors.lime,
+		bar_shape = gshape.rounded_bar,
+		bar_height = dpi(2),
+		handle_color = beautiful.colors.lime,
+		handle_shape = gshape.circle,
+		handle_width = dpi(10),
+		handle_border_color = beautiful.colors.white,
+		handle_border_width = dpi(2),
+		widget = widgets_slider,
+	}
 
-	local player = wibox.widget({
+	local w_time = {
+		tpl.text({
+			id = "w_time_elapsed",
+			markup = "01:07",
+			halign = "left",
+			font = beautiful.fonts.system,
+		}),
+		nil,
+		-- {
+		-- 	w_player,
+		-- 	id = "w_player",
+		-- 	widget = wibox.container.place,
+		-- },
+		tpl.text({
+			id = "w_time_remaining",
+			markup = "-03:25",
+			halign = "right",
+			font = beautiful.fonts.system,
+		}),
+		layout = wibox.layout.align.horizontal,
+	}
+
+	local w_controls = {
+		tpl.svg({
+			id = "btn_backward",
+			forced_width = IMAGE_DEFAULT_SIZE,
+			forced_height = IMAGE_DEFAULT_SIZE,
+		}),
+		tpl.svg({
+			id = "btn_play_pause",
+			forced_width = IMAGE_DEFAULT_SIZE,
+			forced_height = IMAGE_DEFAULT_SIZE,
+		}),
+		tpl.svg({
+			id = "btn_forward",
+			forced_width = IMAGE_DEFAULT_SIZE,
+			forced_height = IMAGE_DEFAULT_SIZE,
+		}),
+		layout = wibox.layout.fixed.horizontal,
+		spacing = dpi(5),
+	}
+
+	local widget = wibox.widget({
 		{
+			w_image,
 			{
 				{
 					{
-						player_image,
-						margins = dpi(8),
-						layout = wibox.container.margin,
-					},
-					valign = "center",
-					layout = wibox.container.place,
-				},
-				{
-					{
-						{
-							player_icon,
-							{
-								markup = ui.pango(metadata.artist, { weight = "bold" }),
-								font = beautiful.fonts.system,
-								widget = wibox.widget.textbox,
-								id = "w_player_artist",
-							},
-							layout = wibox.layout.fixed.horizontal,
-						},
-						{
-							{
-								markup = metadata.title,
-								font = beautiful.fonts.system,
-								widget = wibox.widget.textbox,
-								id = "w_player_title",
-							},
-							widget = wibox.container.margin,
-							margins = { left = dpi(8) },
-						},
-						forced_width = dpi(500),
+						w_artist,
+						w_title,
 						layout = wibox.layout.fixed.vertical,
-						spacing = dpi(3),
+						spacing = dpi(10),
+						forced_width = dpi(300),
 					},
-					valign = "center",
-					layout = wibox.container.place,
+					w_controls,
+					layout = wibox.layout.fixed.horizontal,
+					spacing = dpi(10),
 				},
 				{
-					{
-						control_previous,
-						control_play_pause,
-						control_next,
-						layout = wibox.layout.align.horizontal,
-					},
-					forced_width = 90,
-					valign = "center",
-					haligh = "center",
-					layout = wibox.container.place,
+					w_slider,
+					w_time,
+					layout = wibox.layout.fixed.vertical,
+					forced_width = dpi(300),
 				},
-				spacing = dpi(8),
-				layout = wibox.layout.align.horizontal,
+				layout = wibox.layout.fixed.vertical,
+				spacing = dpi(10),
 			},
-			margins = dpi(8),
-			layout = wibox.container.margin,
+			spacing = dpi(10),
+			layout = wibox.layout.fixed.horizontal,
 		},
-		bg = beautiful.bg_normal,
-		widget = wibox.container.background,
+		widget = wibox.container.margin,
+		margins = dpi(10),
 	})
 
-	local w_control_play = player:get_children_by_id("w_player_play_pause")[1]
-	w_control_play:connect_signal("mouse::enter", function(self)
-		ui.mouse_hover_cursor(true)
-		self.stylesheet = ui.stylesheet_color(beautiful.accent_color)
-	end)
-	w_control_play:connect_signal("mouse::leave", function(self)
-		ui.mouse_hover_cursor(false)
-		self.stylesheet = ui.stylesheet_color(beautiful.fg_normal)
-	end)
-	w_control_play:connect_signal("button::press", function()
-		daemon:play_pause(metadata.player_instance)
-	end)
+	widget.id = metadata.player_instance
 
-	local w_control_previous = player:get_children_by_id("w_player_previous")[1]
-	w_control_previous:connect_signal("mouse::enter", function(self)
-		ui.mouse_hover_cursor(true)
-		self.stylesheet = ui.stylesheet_color(beautiful.accent_color)
-	end)
-	w_control_previous:connect_signal("mouse::leave", function(self)
-		ui.mouse_hover_cursor(false)
-		self.stylesheet = ui.stylesheet_color(beautiful.fg_normal)
-	end)
-	w_control_previous:connect_signal("button::press", function()
-		daemon:previous(metadata.player_instance)
-	end)
+	widget._priv = {}
 
-	local w_control_next = player:get_children_by_id("w_player_next")[1]
-	w_control_next:connect_signal("mouse::enter", function(self)
-		ui.mouse_hover_cursor(true)
-		self.stylesheet = ui.stylesheet_color(beautiful.accent_color)
-	end)
-	w_control_next:connect_signal("mouse::leave", function(self)
-		ui.mouse_hover_cursor(false)
-		self.stylesheet = ui.stylesheet_color(beautiful.fg_normal)
-	end)
-	w_control_next:connect_signal("button::press", function()
-		daemon:next(metadata.player_instance)
-	end)
+	control_button(widget, {
+		backward = "btn_backward",
+		play_pause = "btn_play_pause",
+		forward = "btn_forward",
+		player_instance = metadata.player_instance,
+	})
 
-	function player:update_info(updated_metadata)
-		local w_image = self:get_children_by_id("w_player_image")[1]
-		if updated_metadata.art_path ~= nil and updated_metadata.art_path ~= "" then
-			w_image.image = updated_metadata.art_path
-		else
-			if w_image.image ~= beautiful.svg.music then
-				w_image.image = beautiful.svg.music
-			end
-		end
+	ui.slider(widget:get_children_by_id("w_slider")[1], {
+		on_release = function(value)
+			daemon:change_position(metadata.player_instance, value)
+		end,
+	})
 
-		local w_title = self:get_children_by_id("w_player_title")[1]
-		w_title.markup = updated_metadata.title
-
-		local w_artist = self:get_children_by_id("w_player_artist")[1]
-		w_artist.markup = ui.pango(metadata.artist, { weight = "bold" })
-
-		local w_play = self:get_children_by_id("w_player_play_pause")[1]
-		if w_play ~= nil then
-			if updated_metadata.status == "PLAYING" then
-				w_play.image = beautiful.svg.pause
-			else
-				w_play.image = beautiful.svg.play
-			end
-		end
-	end
-
-	return player
+	return gtable.crush(widget, api, true)
 end
 
 return utils.factory(new)

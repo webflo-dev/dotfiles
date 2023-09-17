@@ -1,6 +1,6 @@
 local wibox = require("wibox")
-local beautiful = require("beautiful")
 local gtable = require("gears.table")
+local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
 local ui = require("ui.utils")
@@ -56,6 +56,7 @@ end
 function M.svg(args)
 	args.enable_margin = (args.enable_margin == false and false) or true
 	args.id = args.id or "svg"
+	args.color = args.color or beautiful.fg_normal
 
 	local template = {
 		image = args.image,
@@ -83,7 +84,7 @@ function M.text(args)
 	local template = {
 		widget = wibox.widget.textbox,
 		markup = "---",
-		align = "center",
+		halign = "center",
 		valign = "center",
 		font = beautiful.fonts.monospace,
 	}

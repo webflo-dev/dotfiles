@@ -47,7 +47,8 @@ alias du=gdu
 alias vi=nvim
 alias vim=nvim
 
-alias uuid-gen='cat /proc/sys/kernel/random/uuid'
+# alias uuid-gen='cat /proc/sys/kernel/random/uuid'
+alias uuid-clip='uuidgen | xclip -sel c'
 # alias keepalive-vdi="xdotool key --window $(comm -12 <(xdotool search --name 'FR09540462W' | sort) <(xdotool search --class 'Wfica' | sort)) --delay 300000 --repeat 288 space"
 
 # alias intelli-shell="$INTELLI_HOME/bin/intelli-shell"

@@ -3,6 +3,7 @@ local icons = require("icons")
 return {
 	{
 		"folke/which-key.nvim",
+		enabled = true,
 		event = "VeryLazy",
 		opts = {
 			plugins = {
@@ -28,18 +29,18 @@ return {
 			},
 		},
 	},
-	{
-		"mrjones2014/legendary.nvim",
-		opts = {
-			which_key = { auto_register = true },
-			select_prompt = " Legendary > ",
-			-- col_separator_char = '  ',
-			icons = {
-				keymap = nil,
-				command = icons.common.terminal,
-				fn = icons.kinds.Function,
-				itemgroup = icons.common.folder_open,
-			},
-		},
-	},
+	-- {
+	-- 	"mrjones2014/legendary.nvim",
+	-- 	opts = {
+	-- 		which_key = { auto_register = true },
+	-- 		select_prompt = " Legendary > ",
+	-- 		-- col_separator_char = '  ',
+	-- 		icons = {
+	-- 			keymap = nil,
+	-- 			command = icons.common.terminal,
+	-- 			fn = icons.kinds.Function,
+	-- 			itemgroup = icons.common.folder_open,
+	-- 		},
+	-- 	},
+	-- },
 }

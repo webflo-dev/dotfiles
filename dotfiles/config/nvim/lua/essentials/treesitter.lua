@@ -1,23 +1,17 @@
 return {
-	{ "JoosepAlviste/nvim-ts-context-commentstring" },
+	{ "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
 
 	{
 		"echasnovski/mini.comment",
-		version = false,
-		dependencies = {
-			"JoosepAlviste/nvim-ts-context-commentstring",
-		},
-		event = { "BufReadPost", "BufNewFile" },
+		event = "VeryLazy",
 		opts = {
-			hooks = {
-				pre = function()
-					require("ts_context_commentstring.internal").update_commentstring({})
+			options = {
+				custom_commentstring = function()
+					return require("ts_context_commentstring.internal").calculate_commentstring()
+						or vim.bo.commentstring
 				end,
 			},
 		},
-		config = function(_, opts)
-			require("mini.comment").setup(opts)
-		end,
 	},
 
 	{
@@ -101,7 +95,6 @@ return {
 			},
 			context_commentstring = {
 				enable = true,
-				enable_autocmd = false, -- use for Commnet.nvim integration
 			},
 			incremental_selection = {
 				enable = true,
@@ -111,7 +104,7 @@ return {
 					init_selection = "<M-space>",
 					node_incremental = "<M-space>",
 					scope_incremental = "<nop>",
-					node_decremental = "<bs>",
+					node_decremental = "<M-bs>",
 				},
 			},
 			textobjects = {
@@ -169,7 +162,7 @@ return {
 					},
 				},
 				swap = {
-					enable = false,
+					enable = true,
 					swap_next = {
 						["<leader>a"] = "@parameter.inner",
 					},

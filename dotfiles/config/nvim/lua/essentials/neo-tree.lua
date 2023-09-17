@@ -39,7 +39,9 @@ return {
 				--   "filesystem",
 				-- },
 				filesystem = {
-					follow_current_file = true,
+					follow_current_file = {
+						enabled = true,
+					},
 					-- use_libuv_file_watcher = true,
 					components = {
 						harpoon_index = function(config, node, state)

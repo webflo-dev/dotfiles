@@ -14,7 +14,8 @@ function M.get_commands()
 	local actions = {
 		lsp = {
 			references = vim.lsp.buf.references,
-			source_definition = "VtsExec goto_source_definition",
+			-- source_definition = "VtsExec goto_source_definition",
+			source_definition = "TSToolsGoToSourceDefinition",
 			definition = vim.lsp.buf.definition,
 			type_definition = vim.lsp.buf.type_definition,
 			implementation = vim.lsp.buf.implementation,

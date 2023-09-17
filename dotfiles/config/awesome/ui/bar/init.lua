@@ -11,10 +11,12 @@ local network = require(... .. ".modules.network")
 local playerctl = require(... .. ".modules.playerctl")
 local record = require(... .. ".modules.record")
 local overmind = require(... .. ".modules.overmind")
+-- local playerctl_old = require(... .. ".modules.playerctl-old")
 
 local function left(s)
 	return wibox.widget({
 		tags(s),
+		-- playerctl_old,
 		playerctl,
 		layout = wibox.layout.fixed.horizontal,
 		spacing = dpi(10),

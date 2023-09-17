@@ -54,17 +54,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 	desc = "Close some filetypes with <q>",
 })
-vim.api.nvim_create_autocmd("BufEnter", {
-	group = custom_group,
-	pattern = "*",
-	callback = function(params)
-		-- Map q to exit in non-filetype/non-listed buffer
-		if vim.bo.buftype == "nofile" or not vim.bo.buflisted then
-			vim.keymap.set("n", "q", ":q<CR>", { buffer = params.buf, silent = true })
-		end
-	end,
-	desc = "Maps <q> to exit on non-filetypes",
-})
+-- vim.api.nvim_create_autocmd("BufEnter", {
+-- 	group = custom_group,
+-- 	pattern = "*",
+-- 	callback = function(params)
+-- 		-- Map q to exit in non-filetype/non-listed buffer
+-- 		if vim.bo.buftype == "nofile" or not vim.bo.buflisted then
+-- 			vim.keymap.set("n", "q", ":q<CR>", { buffer = params.buf, silent = true })
+-- 		end
+-- 	end,
+-- 	desc = "Maps <q> to exit on non-filetypes",
+-- })
 
 vim.api.nvim_create_autocmd("TermOpen", {
 	group = custom_group,
