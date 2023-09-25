@@ -45,19 +45,19 @@ const (
 	MethodStop        = MprisInterface + ".Stop"
 )
 
-type Mpris struct {
-	dbus *DBus
+type mpris struct {
+	dbus *dbusWrapper
 }
 
-func NewMpris() *Mpris {
-	return &Mpris{
-		dbus: NewDBus(),
+func NewMpris() *mpris {
+	return &mpris{
+		dbus: newDBus(),
 	}
 }
 
-func (m Mpris) GetPlayerList() chan *Player {
+func (m mpris) getPlayerList() chan *Player {
 	var playerIds []string
-	m.dbus.CallMethodWithBusObject(methodListNames).Store(&playerIds)
+	m.dbus.callMethodWithBusObject(methodListNames).Store(&playerIds)
 	channel := make(chan *Player)
 	go func() {
 		for _, playerId := range playerIds {
@@ -65,7 +65,7 @@ func (m Mpris) GetPlayerList() chan *Player {
 				continue
 			}
 
-			playerName, isMprisPlayer := m.GetPlayerName(playerId)
+			playerName, isMprisPlayer := m.getPlayerName(playerId)
 			if isMprisPlayer == false {
 				continue
 			}
@@ -73,159 +73,160 @@ func (m Mpris) GetPlayerList() chan *Player {
 			// if m.HasOwner(playerId) == false {
 			// 	continue
 			// }
-			owner := m.GetOwner(playerId)
-			channel <- NewPlayer(playerName, owner, playerId)
+			owner := m.getOwner(playerId)
+			channel <- newPlayer(playerName, owner, playerId)
 		}
 		close(channel)
 	}()
 	return channel
 }
 
-func (m Mpris) GetPlayerId(playerName string) string {
+func GetPlayerId(playerName string) string {
 	return MprisPlayerIdentifier + playerName
 }
-func (m Mpris) GetPlayerName(playerId string) (string, bool) {
+
+func (m mpris) getPlayerName(playerId string) (string, bool) {
 	if _, playerName, ok := strings.Cut(playerId, MprisPlayerIdentifier); ok {
 		return playerName, true
 	}
 	return "", false
 }
 
-func (m Mpris) GetOwner(playerId string) string {
+func (m mpris) getOwner(playerId string) string {
 	var owner string
-	m.dbus.CallMethodWithBusObject(methodGetOwner, playerId).Store(&owner)
+	m.dbus.callMethodWithBusObject(methodGetOwner, playerId).Store(&owner)
 	return owner
 }
 
-func (m Mpris) GetAll(playerId string) map[string]interface{} {
+func (m mpris) getAll(playerId string) map[string]interface{} {
 	var values map[string]interface{}
-	m.dbus.CallMethod(m.dbus.Connection.Object(playerId, MprisPath), MethodGetAll, MprisInterface).Store(&values)
+	m.dbus.callMethod(m.dbus.connection.Object(playerId, MprisPath), MethodGetAll, MprisInterface).Store(&values)
 	return values
 }
 
-func (m Mpris) HasOwner(playerId string) bool {
+func (m mpris) hasOwner(playerId string) bool {
 	started := false
-	m.dbus.CallMethodWithBusObject(methodNameHasOwner, playerId).Store(&started)
+	m.dbus.callMethodWithBusObject(methodNameHasOwner, playerId).Store(&started)
 	return started
 }
 
-func (m *Mpris) AddMatchSignal(playerId string) {
-	m.dbus.Connection.AddMatchSignal(
+func (m *mpris) addMatchSignal(playerId string) {
+	m.dbus.connection.AddMatchSignal(
 		dbus.WithMatchObjectPath(MprisPath),
 		dbus.WithMatchSender(playerId),
 	)
 }
 
-func (m *Mpris) RemoveMatchSignal(playerId string) {
-	m.dbus.Connection.RemoveMatchSignal(
+func (m *mpris) removeMatchSignal(playerId string) {
+	m.dbus.connection.RemoveMatchSignal(
 		dbus.WithMatchObjectPath(MprisPath),
 		dbus.WithMatchSender(playerId),
 	)
 }
 
-func getProperty[T any](dbus *DBus, playerId string, property string, converter func(interface{}) (T, bool)) (T, bool) {
-	variant, err := dbus.GetProperty(playerId, MprisPath, property)
+func getProperty[T any](dbus *dbusWrapper, playerId string, property string, converter func(interface{}) (T, bool)) (T, bool) {
+	variant, err := dbus.getProperty(playerId, MprisPath, property)
 	if err != nil {
-		return Zero[T](), false
+		return zeroValue[T](), false
 	}
 	return converter(variant.Value())
 }
 
-func (m Mpris) callMethod(playerId string, method string, args ...interface{}) {
-	busObj := m.dbus.Connection.Object(playerId, MprisPath)
-	m.dbus.CallMethod(busObj, method, args...)
+func (m mpris) callMethod(playerId string, method string, args ...interface{}) {
+	busObj := m.dbus.connection.Object(playerId, MprisPath)
+	m.dbus.callMethod(busObj, method, args...)
 }
 
-func (m Mpris) Play(playerId string) {
+func (m mpris) Play(playerId string) {
 	m.callMethod(playerId, MethodPlay)
 }
-func (m Mpris) Pause(playerId string) {
+func (m mpris) Pause(playerId string) {
 	m.callMethod(playerId, MethodPause)
 }
-func (m Mpris) PlayPause(playerId string) {
+func (m mpris) PlayPause(playerId string) {
 	m.callMethod(playerId, MethodPlayPause)
 }
-func (m Mpris) Next(playerId string) {
+func (m mpris) Next(playerId string) {
 	m.callMethod(playerId, MethodNext)
 }
-func (m Mpris) Previous(playerId string) {
+func (m mpris) Previous(playerId string) {
 	m.callMethod(playerId, MethodPrevious)
 }
-func (m Mpris) Stop(playerId string) {
+func (m mpris) Stop(playerId string) {
 	m.callMethod(playerId, MethodStop)
 }
 
-func (m Mpris) Position(playerId string) (uint64, bool) {
-	return getProperty(m.dbus, playerId, PropertyPosition, ConvertToUint64)
+func (m mpris) Position(playerId string) (uint64, bool) {
+	return getProperty(m.dbus, playerId, PropertyPosition, convertToUint64)
 }
 
-func (m Mpris) SetPosition(playerId string, position int64) {
-	values := m.GetAll(playerId)
-	if metadata, ok := ConvertToMetadata(values, nil); ok {
-		m.callMethod(playerId, MethodSetPosition, dbus.ObjectPath(metadata.(map[string]any)[MetadataTrackId].(string)), position)
-	}
+func (m mpris) SetPosition(playerId string, position int64) {
+	values := m.getAll(playerId)
+	rawTrackId := getMetadataValueFromRawValues(values, MetadataTrackId)
+	trackId, _ := convertToString(rawTrackId)
+	m.callMethod(playerId, MethodSetPosition, dbus.ObjectPath(trackId), position)
 }
 
-func (m Mpris) CanControl(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanControl, ConvertToBool)
+func (m mpris) CanControl(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanControl, convertToBool)
 }
 
-func (m Mpris) CanGoNext(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanGoNext, ConvertToBool)
+func (m mpris) CanGoNext(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanGoNext, convertToBool)
 }
 
-func (m Mpris) CanGoPrevious(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanGoPrevious, ConvertToBool)
+func (m mpris) CanGoPrevious(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanGoPrevious, convertToBool)
 }
 
-func (m Mpris) CanPause(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanPause, ConvertToBool)
+func (m mpris) CanPause(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanPause, convertToBool)
 }
 
-func (m Mpris) CanPlay(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanPlay, ConvertToBool)
+func (m mpris) CanPlay(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanPlay, convertToBool)
 }
 
-func (m Mpris) CanSeek(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyCanSeek, ConvertToBool)
+func (m mpris) CanSeek(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyCanSeek, convertToBool)
 }
 
-func (m Mpris) LoopStatus(playerId string) (string, bool) {
-	return getProperty(m.dbus, playerId, PropertyLoopStatus, ConvertToString)
+func (m mpris) LoopStatus(playerId string) (string, bool) {
+	return getProperty(m.dbus, playerId, PropertyLoopStatus, convertToString)
 }
-func (m Mpris) SetLoopStatus(playerId string, value string) {
-	m.dbus.SetProperty(playerId, MprisPath, PropertyLoopStatus, value)
-}
-
-func (m Mpris) MaximumRate(playerId string) (float64, bool) {
-	return getProperty(m.dbus, playerId, PropertyMaximumRate, ConvertToFloat64)
+func (m mpris) SetLoopStatus(playerId string, value string) {
+	m.dbus.setProperty(playerId, MprisPath, PropertyLoopStatus, value)
 }
 
-func (m Mpris) Metadata(playerId string) (map[string]dbus.Variant, bool) {
+func (m mpris) MaximumRate(playerId string) (float64, bool) {
+	return getProperty(m.dbus, playerId, PropertyMaximumRate, convertToFloat64)
+}
+
+func (m mpris) Metadata(playerId string) (map[string]dbus.Variant, bool) {
 	return getProperty(m.dbus, playerId, PropertyMetadata, func(value interface{}) (map[string]dbus.Variant, bool) {
 		return value.(map[string]dbus.Variant), true
 	})
 }
 
-func (m Mpris) MinimumRate(playerId string) (float64, bool) {
-	return getProperty(m.dbus, playerId, PropertyMinimumRate, ConvertToFloat64)
+func (m mpris) MinimumRate(playerId string) (float64, bool) {
+	return getProperty(m.dbus, playerId, PropertyMinimumRate, convertToFloat64)
 }
 
-func (m Mpris) PlaybackStatus(playerId string) (string, bool) {
-	return getProperty(m.dbus, playerId, PropertyPlaybackStatus, ConvertToString)
+func (m mpris) PlaybackStatus(playerId string) (string, bool) {
+	return getProperty(m.dbus, playerId, PropertyPlaybackStatus, convertToString)
 }
 
-func (m Mpris) Rate(playerId string) (float64, bool) {
-	return getProperty(m.dbus, playerId, PropertyRate, ConvertToFloat64)
+func (m mpris) Rate(playerId string) (float64, bool) {
+	return getProperty(m.dbus, playerId, PropertyRate, convertToFloat64)
 }
 
-func (m Mpris) Shuffle(playerId string) (bool, bool) {
-	return getProperty(m.dbus, playerId, PropertyShuffle, ConvertToBool)
+func (m mpris) Shuffle(playerId string) (bool, bool) {
+	return getProperty(m.dbus, playerId, PropertyShuffle, convertToBool)
 }
-func (m Mpris) SetShuffle(playerId string, value bool) {
-	m.dbus.SetProperty(playerId, MprisPath, PropertyShuffle, value)
+func (m mpris) SetShuffle(playerId string, value bool) {
+	m.dbus.setProperty(playerId, MprisPath, PropertyShuffle, value)
 }
 
-func (m Mpris) Volume(playerId string) (float64, bool) {
-	return getProperty(m.dbus, playerId, PropertyVolume, ConvertToFloat64)
+func (m mpris) Volume(playerId string) (float64, bool) {
+	return getProperty(m.dbus, playerId, PropertyVolume, convertToFloat64)
 }

@@ -1,23 +1,33 @@
-package main
+package cmd
 
 import (
 	"mprisctl/internal"
+
+	"github.com/spf13/cobra"
 )
 
-func Action(name string) func(string, []string) {
-	mpris := mprisctl.NewMpris()
+func init() {
 
-	mapping := map[string]func(string){
-		"play":       mpris.Play,
-		"pause":      mpris.Pause,
-		"play-pause": mpris.PlayPause,
-		"stop":       mpris.Stop,
-		"next":       mpris.Next,
-		"previous":   mpris.Previous,
+	ActionCmd("play", "Play", mprisctl.NewMpris().Play)
+	ActionCmd("pause", "Pause", mprisctl.NewMpris().Pause)
+	ActionCmd("play-pause", "Toggle play/pause", mprisctl.NewMpris().PlayPause)
+	ActionCmd("stop", "Stop", mprisctl.NewMpris().Stop)
+	ActionCmd("next", "Next track", mprisctl.NewMpris().Next)
+	ActionCmd("previous", "Previous track", mprisctl.NewMpris().Previous)
+}
+
+func ActionCmd(name string, short string, callback func(string)) {
+	var playerName string
+
+	var cmd = &cobra.Command{
+		Use:   name,
+		Short: short,
+		Args:  cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			callback(mprisctl.GetPlayerId(playerName))
+		},
 	}
 
-	action := mapping[name]
-	return func(player string, args []string) {
-		action(mpris.GetPlayerId(player))
-	}
+	WithRequiredPlayer(cmd, &playerName)
+	rootCmd.AddCommand(cmd)
 }

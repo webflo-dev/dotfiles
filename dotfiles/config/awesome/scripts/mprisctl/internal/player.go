@@ -1,7 +1,5 @@
 package mprisctl
 
-import "fmt"
-
 type Player struct {
 	Name  string
 	Owner string
@@ -42,58 +40,70 @@ const (
 	PlaybackPlaying = "Playing"
 	PlaybackPaused  = "Paused"
 	PlaybackStopped = "Stopped"
+)
 
+const (
 	LoopStatusNone     = "None"
 	LoopStatusTrack    = "Track"
 	LoopStatusPlaylist = "Playlist"
 )
 
-// type FieldConfig struct {
-// 	run     func(source map[string]interface{}, key string, value interface{}) bool
-// 	convert func(value interface{}) (interface{}, bool)
-// }
+type converter func(value interface{}, source any) (interface{}, bool)
 
-type Converter func(value interface{}, source any) (interface{}, bool)
-
-var fieldConfigs = map[string]Converter{
-	FieldCanControl:     ConvertToBoolAny,
-	FieldCanGoNext:      ConvertToBoolAny,
-	FieldCanGoPrevious:  ConvertToBoolAny,
-	FieldCanPause:       ConvertToBoolAny,
-	FieldCanPlay:        ConvertToBoolAny,
-	FieldCanSeek:        ConvertToBoolAny,
-	FieldMaximumRate:    ConvertToFloat64Any,
-	FieldMinimumRate:    ConvertToFloat64Any,
-	FieldRate:           ConvertToFloat64Any,
-	FieldVolume:         ConvertToFloat64Any,
-	FieldLoopStatus:     ConvertLoopStatusAny,
-	FieldPlaybackStatus: ConvertToStringAny,
-	FieldShuffle:        ConvertToBoolAny,
-	FieldPosition:       ConvertToUint64Any,
-	FieldMetadata:       ConvertToMetadata,
+var fieldConfigs = map[string]converter{
+	FieldCanControl:     convertToBoolAny,
+	FieldCanGoNext:      convertToBoolAny,
+	FieldCanGoPrevious:  convertToBoolAny,
+	FieldCanPause:       convertToBoolAny,
+	FieldCanPlay:        convertToBoolAny,
+	FieldCanSeek:        convertToBoolAny,
+	FieldMaximumRate:    convertToFloat64Any,
+	FieldMinimumRate:    convertToFloat64Any,
+	FieldRate:           convertToFloat64Any,
+	FieldVolume:         convertToFloat64Any,
+	FieldLoopStatus:     convertLoopStatusAny,
+	FieldPlaybackStatus: convertToStringAny,
+	FieldShuffle:        convertToBoolAny,
+	FieldPosition:       convertToUint64Any,
+	FieldMetadata:       convertToMetadata,
 }
 
-var metadataConfigs = map[string]Converter{
-	MetadataArtist:   ConvertToStringAny,
-	MetadataTitle:    ConvertToStringAny,
-	MetadataAlbum:    ConvertToStringAny,
-	MetadataTrackId:  ConvertToStringAny,
-	MetadataLength:   ConvertToUint64Any,
-	MetadataUrl:      ConvertToStringAny,
-	MetadataArtUrl:   ConvertToStringAny,
-	MetadataDuration: ConvertToDurationAny,
+var metadataConfigs = map[string]converter{
+	MetadataArtist:  convertToStringAny,
+	MetadataTitle:   convertToStringAny,
+	MetadataAlbum:   convertToStringAny,
+	MetadataTrackId: convertToStringAny,
+	MetadataLength:  convertToUint64Any,
+	MetadataUrl:     convertToStringAny,
+	MetadataArtUrl:  convertToStringAny,
 }
 
-func NewPlayer(name string, owner string, id string) *Player {
-	return &Player{
+func newPlayer(name string, owner string, id string) *Player {
+	player := &Player{
 		Name:  name,
 		Owner: owner,
 		Id:    id,
-		Info:  make(map[string]interface{}, 20),
 	}
+
+	player.Info = make(map[string]interface{}, 20)
+	for key, converter := range fieldConfigs {
+		player.Info[key], _ = converter(nil, player)
+	}
+
+	metadata := player.Info[FieldMetadata].(map[string]interface{})
+	for key, converter := range metadataConfigs {
+		metadata[key], _ = converter(nil, metadata)
+	}
+
+	return player
 }
 
-func (p *Player) UpdateInfo(values map[string]interface{}, postUpdate func(p *Player, updateKey string)) {
+func getMetadataValueFromRawValues(values interface{}, key string) interface{} {
+	metadata := values.(map[string]interface{})[FieldMetadata].(map[string]interface{})
+	return metadata[key]
+}
+
+func (p *Player) updateProperties(values map[string]interface{}, postUpdate func(p *Player, updateKey string)) {
 	for key, value := range values {
 		converter, supported := fieldConfigs[key]
 		if supported == false {
@@ -111,120 +121,58 @@ func (p *Player) UpdateInfo(values map[string]interface{}, postUpdate func(p *Pl
 			}
 		}
 	}
-
-	// for key, converter := range fieldConfigs {
-	// 	value := values[key]
-	//
-	// 	if value == nil {
-	// 		if existingValue, exists := p.Info[key]; exists {
-	// 			if existingValue == nil {
-	// 				p.Info[key], _ = converter(nil)
-	// 			}
-	// 		}
-	// 	} else {
-	// 		if convertedValue, converted := converter(value); converted {
-	// 			p.Info[key] = convertedValue
-	// 			if postUpdate != nil {
-	// 				postUpdate(p, key)
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
-// func assignMetadata(source map[string]interface{}, key string, value interface{}) bool {
-// 	metadata, _ := ExtractMetadata(value)
-// 	postMetadataExtraction(metadata)
-// 	currentMetadata, hasMetadata := source[FieldMetadata]
-// 	if hasMetadata == false || metadata[MetadataTrackId] != currentMetadata.(map[string]interface{})[MetadataTrackId] {
-// 		source[FieldMetadata] = metadata
-// 		return true
-// 	}
-// 	return false
-// }
-
-func ConvertLoopStatusAny(value interface{}, source any) (interface{}, bool) {
-	if convertedValue, ok := ConvertToStringAny(value, source); ok {
+func convertLoopStatusAny(value interface{}, source any) (interface{}, bool) {
+	if convertedValue, ok := convertToStringAny(value, source); ok {
 		return convertedValue, true
 	} else {
 		return LoopStatusNone, true
 	}
 }
 
-func ConvertToDurationAny(value interface{}, source any) (interface{}, bool) {
+func convertToDurationAny(value interface{}, source any) (interface{}, bool) {
 	metadata := source.(map[string]interface{})
 	if length, ok := metadata[MetadataLength]; ok {
-		lengthNum, _ := ConvertToUint64(length)
-		duration, _, _, _ := ConvertToDuration(lengthNum)
+		lengthNum, _ := convertToUint64(length)
+		duration, _, _, _ := convertToDuration(lengthNum)
 		return duration, true
 	} else {
-		return "00:00", true
+		return "--:--", true
 	}
 }
 
-func ConvertToMetadata(value interface{}, source any) (interface{}, bool) {
-	player := source.(*Player)
+func convertToMetadata(value interface{}, source any) (interface{}, bool) {
+	var metadata map[string]interface{}
+	if value == nil {
+		metadata = make(map[string]interface{}, 10)
+	} else {
+		player := source.(*Player)
+		metadata = player.Info[FieldMetadata].(map[string]interface{})
 
-	fmt.Println("ConvertToMetadata", value, source)
+		for key, newValue := range value.(map[string]interface{}) {
+			converter, supported := metadataConfigs[key]
+			if supported == false {
+				continue
+			}
 
-	if player.Info[FieldMetadata] == nil {
-		metadata := make(map[string]interface{}, 10)
-		player.Info[FieldMetadata] = metadata
-		fmt.Println("no existing metadata => initialize new map")
-		for key, converter := range metadataConfigs {
-			metadata[key], _ = converter(nil, metadata)
+			if newValue == nil {
+				metadata[key], _ = converter(nil, metadata)
+			} else {
+				convertedValue, _ := converter(newValue, metadata)
+				metadata[key] = convertedValue
+			}
 		}
 	}
 
-	metadata := player.Info[FieldMetadata].(map[string]interface{})
-
-	for key, newValue := range value.(map[string]interface{}) {
-		fmt.Println("processing value => ", key, newValue)
-		converter, supported := metadataConfigs[key]
-		if supported == false {
-			fmt.Println("unsupported key => ", key)
-			continue
-		}
-
-		if newValue == nil {
-			fmt.Println("nil value => ", key, newValue)
-			metadata[key], _ = converter(nil, metadata)
-			fmt.Println("converted value => ", metadata[key])
-		} else {
-			convertedValue, _ := converter(newValue, metadata)
-			metadata[key] = convertedValue
-			fmt.Println("converted value => ", metadata, convertedValue)
-		}
-	}
+	postMetadataExtraction(metadata)
 	return metadata, true
 }
 
-// func ExtractMetadata(source interface{}) (map[string]interface{}, bool) {
-// 	metadata := make(map[string]interface{}, 10)
-//
-// 	_source := make(map[string]interface{}, 1)
-// 	if source != nil {
-// 		_source = source.(map[string]interface{})
-// 	}
-//
-// 	for key, config := range metadataConfigs {
-// 		convertedValue := _source[key]
-// 		if config.convert != nil {
-// 			_convertedValue, converted := config.convert(convertedValue)
-// 			if converted == false {
-// 				continue
-// 			}
-// 			convertedValue = _convertedValue
-// 		}
-// 		config.run(metadata, key, convertedValue)
-// 	}
-// 	return metadata, true
-// }
-
 func postMetadataExtraction(metadata map[string]interface{}) {
 	if length, initialized := metadata[MetadataLength]; initialized {
-		lengthNum, _ := ConvertToUint64(length)
-		metadata[MetadataDuration], _, _, _ = ConvertToDuration(lengthNum)
+		lengthNum, _ := length.(uint64)
+		metadata[MetadataDuration], _, _, _ = convertToDuration(lengthNum)
 	} else {
 		metadata[MetadataDuration] = ""
 	}

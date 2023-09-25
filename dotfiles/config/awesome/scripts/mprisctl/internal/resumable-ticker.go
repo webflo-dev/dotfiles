@@ -12,7 +12,7 @@ const (
 	statePaused
 )
 
-type ResumableTicker struct {
+type resumableTicker struct {
 	checkPoint time.Time
 	done       chan bool
 	remaining  time.Duration
@@ -22,8 +22,8 @@ type ResumableTicker struct {
 	duration   time.Duration
 }
 
-func NewTicker(duration time.Duration, callback func()) *ResumableTicker {
-	ticker := &ResumableTicker{
+func newTicker(duration time.Duration, callback func()) *resumableTicker {
+	ticker := &resumableTicker{
 		duration:  duration,
 		remaining: 0,
 		callback:  callback,
@@ -33,12 +33,12 @@ func NewTicker(duration time.Duration, callback func()) *ResumableTicker {
 }
 
 func waitFor(duration time.Duration) {
-	timer := time.NewTimer(duration)
+	timer := time.NewTimer(duration * time.Microsecond)
 	<-timer.C
 	return
 }
 
-func (t *ResumableTicker) Start() {
+func (t *resumableTicker) start() {
 	if t.state != stateIdle {
 		return
 	}
@@ -60,16 +60,16 @@ func (t *ResumableTicker) Start() {
 	}()
 }
 
-func (t *ResumableTicker) StartAfter(delay time.Duration) {
+func (t *resumableTicker) startAfter(delay time.Duration) {
 	waitFor(delay)
-	t.Start()
+	t.start()
 }
-func (t *ResumableTicker) ResumeAfter(delay time.Duration) {
+func (t *resumableTicker) resumeAfter(delay time.Duration) {
 	waitFor(delay)
-	t.Resume()
+	t.resume()
 }
 
-func (t *ResumableTicker) Stop() {
+func (t *resumableTicker) stop() {
 	if t.state == stateIdle {
 		return
 	}
@@ -78,38 +78,38 @@ func (t *ResumableTicker) Stop() {
 	t.state = stateIdle
 }
 
-func (t *ResumableTicker) Pause() {
+func (t *resumableTicker) pause() {
 	if t.state != stateRunning {
 		return
 	}
 	elapsed := time.Since(t.checkPoint)
 	t.remaining = t.remaining - elapsed
-	t.Stop()
+	t.stop()
 	t.state = statePaused
 }
 
-func (t *ResumableTicker) Resume() {
+func (t *resumableTicker) resume() {
 	if t.state != statePaused {
 		return
 	}
-	t.Stop()
+	t.stop()
 	timer := time.NewTimer(t.remaining * time.Microsecond)
 	<-timer.C
-	t.Start()
+	t.start()
 }
 
-func (t *ResumableTicker) ResumeOrStart() {
+func (t *resumableTicker) resumeOrStart() {
 	switch t.state {
 	case statePaused:
-		t.Resume()
+		t.resume()
 	case stateIdle:
-		t.Start()
+		t.start()
 	}
 }
 
-func (t *ResumableTicker) ResumeOrStartAfter(delay time.Duration) {
+func (t *resumableTicker) resumeOrStartAfter(delay time.Duration) {
 	if delay != 0 {
 		waitFor(delay)
 	}
-	t.ResumeOrStart()
+	t.resumeOrStart()
 }

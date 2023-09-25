@@ -1,5 +1,5 @@
 package mprisctl
 
-func Zero[T any]() (ret T) {
+func zeroValue[T any]() (ret T) {
 	return
 }

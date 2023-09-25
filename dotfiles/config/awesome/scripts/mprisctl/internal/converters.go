@@ -7,7 +7,7 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func ConvertToDuration(position uint64) (string, uint64, uint64, uint64) {
+func convertToDuration(position uint64) (string, uint64, uint64, uint64) {
 	ts := position / 1000000
 	seconds := ts % 60
 	minutes := (ts / 60) % 60
@@ -20,7 +20,7 @@ func ConvertToDuration(position uint64) (string, uint64, uint64, uint64) {
 	}
 }
 
-func ConvertToString(value interface{}) (string, bool) {
+func convertToString(value interface{}) (string, bool) {
 	if value == nil {
 		return "", false
 	}
@@ -35,11 +35,11 @@ func ConvertToString(value interface{}) (string, bool) {
 		return "", true
 	}
 }
-func ConvertToStringAny(value interface{}, source any) (interface{}, bool) {
-	return ConvertToString(value)
+func convertToStringAny(value interface{}, source any) (interface{}, bool) {
+	return convertToString(value)
 }
 
-func ConvertToUint64(value interface{}) (uint64, bool) {
+func convertToUint64(value interface{}) (uint64, bool) {
 	if value == nil {
 		return 0, false
 	}
@@ -54,11 +54,11 @@ func ConvertToUint64(value interface{}) (uint64, bool) {
 	}
 }
 
-func ConvertToUint64Any(value interface{}, source any) (interface{}, bool) {
-	return ConvertToUint64(value)
+func convertToUint64Any(value interface{}, source any) (interface{}, bool) {
+	return convertToUint64(value)
 }
 
-func ConvertToBool(value interface{}) (bool, bool) {
+func convertToBool(value interface{}) (bool, bool) {
 	if value == nil {
 		return false, false
 	}
@@ -69,11 +69,11 @@ func ConvertToBool(value interface{}) (bool, bool) {
 		return false, true
 	}
 }
-func ConvertToBoolAny(value interface{}, source any) (interface{}, bool) {
-	return ConvertToBool(value)
+func convertToBoolAny(value interface{}, source any) (interface{}, bool) {
+	return convertToBool(value)
 }
 
-func ConvertToFloat64(value interface{}) (float64, bool) {
+func convertToFloat64(value interface{}) (float64, bool) {
 	if value == nil {
 		return 0, false
 	}
@@ -85,6 +85,6 @@ func ConvertToFloat64(value interface{}) (float64, bool) {
 		return 0, true
 	}
 }
-func ConvertToFloat64Any(value interface{}, source any) (interface{}, bool) {
-	return ConvertToFloat64(value)
+func convertToFloat64Any(value interface{}, source any) (interface{}, bool) {
+	return convertToFloat64(value)
 }
